@@ -23,15 +23,15 @@ class CartController extends Controller
         $cart = Cart::where('customer_id', request()->get(
             'customer_id'
         ))->first();
-
         if (!$cart) {
             $cart = Cart::create([
-                'customer_id' => request()->get('customer_id'),
+                'customer_id' => Auth::user()->customer_id ?? request()->get('customer_id'),
                 'customer_name' => Auth::user()->name ?? 'Customer',
             ]);
         }
+        $cart->items = $cart->items;
         $cart->sub_total = $cart->items()->sum('total_price');
-        $cart->total_tax = $cart->sub_total * 0.12;
+        $cart->total_tax = round($cart->sub_total * 0.12);
         $cart->total_price = $cart->sub_total + $cart->total_tax;
         return response()->json(
             $cart

@@ -51,13 +51,6 @@ class OrderController extends Controller
                 $searchQuery = ['order_id' => $request->get('order_id')];
             }
 
-            $checkStatus = Order::where('cart_id', $request->get('cart_id'))
-                ->orWhere('order_id', $request()->get('order_id'))->first();
-
-            if ($checkStatus->status == 'WAITING_PAYMENT') {
-                return response()->json(['token' => $checkStatus->snap_token], 400);
-            }
-
             $order = Order::updateOrCreate($searchQuery, [
                 'order_number' => 'ORD-' . time(),
                 'status' => 'WAITING_PAYMENT',
@@ -86,28 +79,25 @@ class OrderController extends Controller
                 ];
             })->toArray();
 
-
-
             $totalPrice = $order->items()->sum('total_price');
-
-            $orderItems = array_merge($orderItems, [
-                [
-                    'id' => 'TAX_12',
-                    'name' => 'TAX_12%',
-                    'price' => $order->total_tax,
-                    'quantity' => 1,
-                    'category' => 'TAX',
-                ]
-            ]);
 
             $subTotal = round($totalPrice);
             $totalTax = round($totalPrice * 0.12);
             $grossAmount = $subTotal + $totalTax;
 
             $order->sub_total = $subTotal;
-            $order->total_tax = $totalTax;
+            $order->total_tax = round($totalTax);
             $order->total_price = $grossAmount;
 
+            $orderItems = array_merge($orderItems, [
+                [
+                    'id' => 'TAX_12',
+                    'name' => 'TAX_12%',
+                    'price' => $totalTax,
+                    'quantity' => 1,
+                    'category' => 'TAX',
+                ]
+            ]);
             if (!$order->snap_token) {
                 $params = [
                     'transaction_details' => [

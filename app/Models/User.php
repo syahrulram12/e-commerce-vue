@@ -40,4 +40,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['customer_name'];
+
+
+    public function getCustomerNameAttribute()
+    {
+        return Customer::where('usert_id', $this->id)->first()->name ?? 'Customer';
+    }
 }
