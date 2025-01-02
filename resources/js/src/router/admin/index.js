@@ -7,11 +7,15 @@ export default [
     {
         path: "/admin/",
         redirect: { name: "admin-dashboard" },
+        meta: {
+            public: false,
+        },
     },
     {
         path: "/admin/dashboard",
         name: "admin-dashboard",
         meta: {
+            public: false,
             layout: "admin",
         },
         component: () => import("@/views/pages/admin/dashboard/Dashboard.vue"),

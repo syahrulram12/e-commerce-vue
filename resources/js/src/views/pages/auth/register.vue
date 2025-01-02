@@ -229,14 +229,9 @@ export default {
           // Handle login logic here
           register(vForm)
             .then((response) => {
-              this.$swal({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                icon: "success",
-                title: "Account created successfully",
+              this.$bvToast.toast("Register success", {
+                title: "Success",
+                variant: "success",
               });
             })
             .catch((error) => {

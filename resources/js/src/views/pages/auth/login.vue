@@ -88,8 +88,8 @@ export default {
           axios
             .post("/login", vForm)
             .then((response) => {
-              // Store Auth User 
-            
+              // Store Auth User
+              localStorage.setItem("authUser", JSON.stringify(response.data));
               // Redirect to dashboard
               this.$router.push({ name: "admin-dashboard" });
             })

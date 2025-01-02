@@ -20,6 +20,10 @@ export const checkAndRemoveAuthUser = () => {
     }
 };
 
+export const removeUserData = () => {
+    localStorage.removeItem("authUser");
+};
+
 // Store auth user in localStorage
 export const storeAuthAdmin = (user) => {
     localStorage.setItem("authAdmin", JSON.stringify(user));

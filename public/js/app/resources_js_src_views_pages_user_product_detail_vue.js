@@ -137,7 +137,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
               title: "Success",
               variant: "success"
             });
-            // window.location.reload();
+            _this2.$router.push({
+              name: "cart"
+            });
           })["catch"](function (error) {
             _this2.$bvToast.toast("Failed to add product to cart", {
               title: "Error",
@@ -591,6 +593,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addToCart: () => (/* binding */ addToCart),
 /* harmony export */   deleteData: () => (/* binding */ deleteData),
+/* harmony export */   deleteItem: () => (/* binding */ deleteItem),
 /* harmony export */   getDetail: () => (/* binding */ getDetail),
 /* harmony export */   getList: () => (/* binding */ getList),
 /* harmony export */   postData: () => (/* binding */ postData)
@@ -617,6 +620,9 @@ var getDetail = function getDetail(slug) {
 };
 var deleteData = function deleteData(id) {
   return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
+};
+var deleteItem = function deleteItem(id) {
+  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/delete-item/").concat(id));
 };
 var addToCart = function addToCart() {
   var _httpService$getHttp3;

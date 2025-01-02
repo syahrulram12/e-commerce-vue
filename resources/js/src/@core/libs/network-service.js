@@ -1,5 +1,6 @@
 import axiosIns from "./axios";
 const csrfCookiePath = "/sanctum/csrf-cookie";
+import { removeUserData } from "@/auth/utils";
 
 export default new (class {
     axiosIns = null;

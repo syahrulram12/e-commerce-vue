@@ -284,7 +284,7 @@ export default {
                 title: "Success",
                 variant: "success",
               });
-              // window.location.reload();
+              this.$router.push({ name: "cart" });
             })
             .catch((error) => {
               this.$bvToast.toast("Failed to add product to cart", {
@@ -292,6 +292,7 @@ export default {
                 variant: "danger",
               });
               this.buttonLoading = false;
+              
             });
         } else {
           this.buttonLoading = false;

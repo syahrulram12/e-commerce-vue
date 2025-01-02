@@ -29,6 +29,7 @@ class AuthSPAController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $user->customer = Customer::where('user_id', $user->id)->first();
             return response()->json(['user' => $user], 200);
         }
         return response()->json(['email' => 'Credential not found'], 401);

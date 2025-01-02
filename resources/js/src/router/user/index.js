@@ -46,14 +46,14 @@ export default [
         },
         component: () => import("@/views/pages/user/index.vue"),
     },
-    {
-        name: "order",
-        path: "/order",
-        meta: {
-            layout: "default",
-        },
-        component: () => import("@/views/pages/user/order/index.vue"),
-    },
+    // {
+    //     name: "order",
+    //     path: "/order",
+    //     meta: {
+    //         layout: "default",
+    //     },
+    //     component: () => import("@/views/pages/user/order/index.vue"),
+    // },
     {
         name: "cart",
         path: "/cart",
@@ -96,12 +96,12 @@ export default [
         },
         component: () => import("@/views/pages/user/aboutUs.vue"),
     },
-    {
-        name: "payment-success",
-        path: "/order/payment-success",
-        meta: {
-            layout: "default",
-        },
-        component: () => import("@/views/pages/user/order/paymentSuccess.vue"),
-    },
+    // {
+    //     name: "payment-success",
+    //     path: "/order/payment-success",
+    //     meta: {
+    //         layout: "default",
+    //     },
+    //     component: () => import("@/views/pages/user/order/paymentSuccess.vue"),
+    // },
 ];

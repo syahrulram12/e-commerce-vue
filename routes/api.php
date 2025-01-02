@@ -36,4 +36,7 @@ Route::apiResources([
 ]);
 
 Route::post('/cart/add-to-cart', [CartController::class, 'addToCart']);
+Route::delete('/cart/delete-item/{id}', [CartController::class, 'deleteItem']);
+
+
 Route::post('/midtrans-callback', [OrderController::class, 'midtransCallback']);

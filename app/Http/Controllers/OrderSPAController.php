@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderSPAController extends Controller
 {
     const SPA_PATH = '/spa/order';
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +20,6 @@ class OrderSPAController extends Controller
         $orderBy = request()->query('sortBy', 'id');
         $sortBy = request()->query('sortDesc') == 'true' ? 'desc' : 'asc';
         $perPage = request()->query('perPage', 10);
-
         return response()->json(Order::tableSearch()
             ->orderBy($orderBy, $sortBy)
             ->paginate($perPage)

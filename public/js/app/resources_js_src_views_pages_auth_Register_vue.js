@@ -87,14 +87,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }
           // Handle login logic here
           (0,_services_spa_auth__WEBPACK_IMPORTED_MODULE_4__.register)(vForm).then(function (response) {
-            _this.$swal({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              icon: "success",
-              title: "Account created successfully"
+            _this.$bvToast.toast("Register success", {
+              title: "Success",
+              variant: "success"
             });
           })["catch"](function (error) {
             if (error.response.data.errors) {

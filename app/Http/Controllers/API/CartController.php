@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +20,19 @@ class CartController extends Controller
     public function index()
     {
         $perPage = request()->get('perPage', 10);
-        $cart = Cart::with('items')
-            ->where('customer_id', request()->get(
-                'customer_id'
-            ))->first();
-        $cart->total_price = $cart->items()->sum('total_price');
-        
+        $cart = Cart::where('customer_id', request()->get(
+            'customer_id'
+        ))->first();
+
+        if (!$cart) {
+            $cart = Cart::create([
+                'customer_id' => request()->get('customer_id'),
+                'customer_name' => Auth::user()->name ?? 'Customer',
+            ]);
+        }
+        $cart->sub_total = $cart->items()->sum('total_price');
+        $cart->total_tax = $cart->sub_total * 0.12;
+        $cart->total_price = $cart->sub_total + $cart->total_tax;
         return response()->json(
             $cart
         );
@@ -170,5 +178,23 @@ class CartController extends Controller
             $cart->total_price = $cart->sub_total + $cart->total_tax;
             $cart->save();
         });
+    }
+
+    public function deleteItem($id)
+    {
+
+        $cartItem = CartItem::findOrFail($id);
+        $cartId = $cartItem->cart_id;
+        $cartItem->delete();
+
+        $cart = Cart::findOrFail($cartId);
+        $cart->sub_total = $cart->items()->sum('total_price');
+        $cart->total_tax = $cart->sub_total * 0.12;
+        $cart->total_price = $cart->sub_total + $cart->total_tax;
+        $cart->save();
+
+        return response()->json([
+            'message' => 'Item has been removed from cart',
+        ]);
     }
 }

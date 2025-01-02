@@ -116,9 +116,7 @@
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 z-1 py-4">
         <transition name="fade" mode="out-in">
           <slot>
-            <div class="mx-auto">
-              
-            </div>
+            <div class="mx-auto"></div>
           </slot>
         </transition>
       </main>
@@ -127,6 +125,7 @@
 </template>
 <script>
 import httpService from "@core/libs/network-service";
+import { getAuthUser } from "@/auth/utils";
 import {
   BButton,
   BCollapse,
@@ -159,6 +158,15 @@ export default {
     BButton,
     BLink,
   },
+  setup() {
+    const user = getAuthUser();
+    return {
+      user,
+    };
+  },
+  created() {
+    console.log(this.user);
+  },
   methods: {
     isActive(routeName) {
       return this.$route.name === routeName;
@@ -167,6 +175,7 @@ export default {
       httpService
         .logout()
         .then((response) => {
+          localStorage.removeItem("authUser");
           this.$router.push({ name: "login" });
         })
         .catch((error) => {

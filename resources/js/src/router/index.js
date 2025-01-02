@@ -6,6 +6,7 @@ import adminRoute from "./admin";
 import { isAdminLogin } from "@/auth/utils";
 
 import error from "./error";
+import { getAuthUser } from "../auth/utils";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -22,22 +23,14 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, _, next) => {
-    // console.log(to);
-
-    if (to.meta.user === "admin") {
-        const isAdminLogin = isAdminLogin();
+    const isLoggedIn = getAuthUser();
+    if (!isLoggedIn && to.meta.public === false) {
+        return next({ name: "login" });
     }
-    // const isLoggedIn = isUserLogin();
-    // if (to.meta.public) return next();
-
-    // if (!isLoggedIn && to.name != "login") {
-    //     return next({ name: "login" });
-    // }
 
     // if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-    //     next(getHomeRouteForLoggedInUser);
+    //     next({ name: "admin-dashboard" });
     // }
-
     return next();
 });
 

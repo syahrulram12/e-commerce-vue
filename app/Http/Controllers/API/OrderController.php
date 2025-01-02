@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\Product;
@@ -44,9 +45,22 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $transcation = DB::transaction(function () use ($request) {
-            $order = Order::updateOrCreate(['id' => $request->get('order_id')], [
+            if (request()->get('cart_id')) {
+                $searchQuery = ['cart_id' => $request->get('cart_id')];
+            } else {
+                $searchQuery = ['order_id' => $request->get('order_id')];
+            }
+
+            $checkStatus = Order::where('cart_id', $request->get('cart_id'))
+                ->orWhere('order_id', $request()->get('order_id'))->first();
+
+            if ($checkStatus->status == 'WAITING_PAYMENT') {
+                return response()->json(['token' => $checkStatus->snap_token], 400);
+            }
+
+            $order = Order::updateOrCreate($searchQuery, [
                 'order_number' => 'ORD-' . time(),
-                'status' => 'PENDING',
+                'status' => 'WAITING_PAYMENT',
             ]);
 
             foreach ($request->get('items') as $key => $item) {
@@ -72,7 +86,19 @@ class OrderController extends Controller
                 ];
             })->toArray();
 
+
+
             $totalPrice = $order->items()->sum('total_price');
+
+            $orderItems = array_merge($orderItems, [
+                [
+                    'id' => 'TAX_12',
+                    'name' => 'TAX_12%',
+                    'price' => $order->total_tax,
+                    'quantity' => 1,
+                    'category' => 'TAX',
+                ]
+            ]);
 
             $subTotal = round($totalPrice);
             $totalTax = round($totalPrice * 0.12);
@@ -81,8 +107,32 @@ class OrderController extends Controller
             $order->sub_total = $subTotal;
             $order->total_tax = $totalTax;
             $order->total_price = $grossAmount;
-            $order->save();
+
+            if (!$order->snap_token) {
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->order_number,
+                        'gross_amount' => $order->total_price,
+                    ],
+                    'item_details' => $orderItems,
+                    'customer_details' => [
+                        'first_name' => "Test Midtrans",
+                        'email' => "test@midtrans.com"
+                    ],
+                ];
+
+                $snapToken = Snap::getSnapToken($params);
+
+                $order->snap_token = $snapToken;
+                $order->save();
+            } else {
+                $snapToken = $order->snap_token;
+            }
+
+            return compact('snapToken');
         });
+
+        return response()->json(['token' => $transcation['snapToken']]);
     }
 
     /**
@@ -125,7 +175,7 @@ class OrderController extends Controller
         $fraud = $notification->fraud_status;
 
         DB::transaction(function () use ($notification, $transaction, $type, $fraud) {
-            $order = Order::findOrFail($notification->order_id);
+            $order = Order::where('order_number', $notification->order_id)->first();
 
             if ($transaction == 'capture') {
                 if ($type == 'credit_card') {
@@ -138,7 +188,6 @@ class OrderController extends Controller
                 }
             } else if ($transaction == 'settlement') {
                 $order->status = 'SUCCESS';
-                $order->order_completed = Carbon::now();
             } else if ($transaction == 'pending') {
                 $order->status = 'PENDING';
             } else if ($transaction == 'deny') {
@@ -147,6 +196,11 @@ class OrderController extends Controller
                 $order->status = 'CANCELLED';
             } else if ($transaction == 'cancel') {
                 $order->status = 'CANCELLED';
+            }
+
+
+            if ($order->status == 'SUCCESS') {
+                $cart = Cart::where('id', $order->cart_id)->delete();
             }
 
             $order->save();
@@ -190,7 +244,6 @@ class OrderController extends Controller
         ];
 
         $snapToken = Snap::getSnapToken($params);
-
 
         $order->snap_token = $snapToken;
         $order->save();

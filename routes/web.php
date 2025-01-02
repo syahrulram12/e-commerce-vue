@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthSPAController::class, 'login'])->name('login');
 Route::post('/register', [AuthSPAController::class, 'register']);
 
-Route::prefix('spa')->group(function () {
+Route::prefix('spa')->middleware('auth')->group(function () {
     Route::post('/logout', [AuthSPAController::class, 'logout']);
     Route::resource('/product', 'ProductSPAController');
     Route::get('/category/category-search', [CategorySPAController::class, 'categorySearch']);

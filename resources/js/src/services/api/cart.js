@@ -18,6 +18,10 @@ export const deleteData = (id) => {
     return httpService.getHttp().delete(`${resourcePath}/${id}`);
 };
 
+export const deleteItem = (id) => {
+    return httpService.getHttp().delete(`${resourcePath}/delete-item/${id}`);
+};
+
 export const addToCart = (...data) => {
     return httpService.getHttp().post(`${resourcePath}/add-to-cart`, ...data);
 };
