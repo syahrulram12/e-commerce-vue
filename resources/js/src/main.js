@@ -13,6 +13,7 @@ import "./global-components";
 import "@core/libs/axios";
 import "@core/libs/toastification";
 import "@core/libs/sweetalert2";
+import store from "@/store";
 
 // Feather font icon - For form-wizard
 // * Shall remove it if not using font-icons of feather-icons - For form-wizard
@@ -29,5 +30,6 @@ Vue.use(BootstrapVue);
 
 new Vue({
     router,
+    store,
     render: (h) => h(App),
 }).$mount("#app");

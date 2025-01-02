@@ -60,7 +60,7 @@ export default [
         meta: {
             layout: "default",
         },
-        component: () => import("@/views/pages/user/cart.vue"),
+        component: () => import("@/views/pages/user/carts/index.vue"),
     },
     {
         name: "product",

@@ -78,40 +78,11 @@ class OrderController extends Controller
             $totalTax = round($totalPrice * 0.12);
             $grossAmount = $subTotal + $totalTax;
 
-            $orderItems = array_merge($orderItems, [
-                [
-                    'id' => 'TAX01',
-                    'name' => "TAX PPN 12%",
-                    'quantity' => 1,
-                    'price' => (int) $totalTax,
-                    'category' => 'TAX'
-                ]
-            ]);
-
-
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->order_number,
-                    'gross_amount' => $grossAmount,
-                ],
-                'item_details' => $orderItems,
-                'customer_details' => [
-                    'first_name' => "Test Midtrans",
-                    'email' => "test@midtrans.com"
-                ],
-            ];
-
-            $snapToken = Snap::getSnapToken($params);
             $order->sub_total = $subTotal;
             $order->total_tax = $totalTax;
             $order->total_price = $grossAmount;
-            $order->snap_token = $snapToken;
             $order->save();
-
-            return compact('snapToken');
         });
-
-        return response()->json($transcation['snapToken']);
     }
 
     /**
@@ -191,5 +162,39 @@ class OrderController extends Controller
         });
 
         return response()->json('Success');
+    }
+
+    public function checkout(Request $request)
+    {
+        $order = Order::findOrFail($request->get('order_id'));
+        $orderItems = $order->items()->get()->map(function ($item) {
+            return [
+                'id' => 'Product' . '_' . $item->id,
+                'name' => $item->product->name,
+                'price' => (int) $item->price_per_unit,
+                'quantity' => $item->quantity,
+                'category' => $item->product->category_name,
+            ];
+        })->toArray();
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => $order->total_price,
+            ],
+            'item_details' => $orderItems,
+            'customer_details' => [
+                'first_name' => "Test Midtrans",
+                'email' => "test@midtrans.com"
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+
+        $order->snap_token = $snapToken;
+        $order->save();
+
+        return response()->json($snapToken);
     }
 }

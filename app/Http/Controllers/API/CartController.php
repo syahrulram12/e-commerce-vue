@@ -7,6 +7,7 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 class CartController extends Controller
 {
@@ -18,9 +19,15 @@ class CartController extends Controller
     public function index()
     {
         $perPage = request()->get('perPage', 10);
-        return response()->json(Cart::tableSearch()
-            ->paginate($perPage))
-            ->withQueryString();
+        $cart = Cart::with('items')
+            ->where('customer_id', request()->get(
+                'customer_id'
+            ))->first();
+        $cart->total_price = $cart->items()->sum('total_price');
+        
+        return response()->json(
+            $cart
+        );
     }
 
     /**
@@ -41,18 +48,50 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        DB::transaction(function () use ($request) {
+        $carts = DB::transaction(function () use ($request) {
             $cart = Cart::updateOrCreate([
                 'customer_id' => $request->customer_id,
             ], [
                 'customer_name' => Auth::user()->name ?? 'Customer',
                 'product_id' => $request->product_id,
                 'user_id' => $request->user_id,
-                'sub_total' => $request->sub_total,
-                'total_tax' => $request->total_tax,
-                'total_price' => $request->total_price,
             ]);
-            return response()->json($cart);
+
+            foreach ($request->get('items') as $key => $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $totalPriceItem = $product->price * $item['quantity'];
+                $cart->items()->updateOrCreate([
+                    'cart_id' => $cart->id,
+                    'product_id' => $item['product_id'],
+                ], [
+                    'product_name' => $product->name,
+                    'price_per_unit' => $product->price,
+                    'quantity' => $item['quantity'],
+                    'total_price' => $totalPriceItem
+                ]);
+            }
+
+            $cartItems = $cart->items()->get()->map(function ($item) {
+                return [
+                    'id' => 'Product' . '_' . $item->id,
+                    'name' => $item->product->name,
+                    'price' => (int) $item->price_per_unit,
+                    'quantity' => $item->quantity,
+                    'category' => $item->product->category_name,
+                ];
+            })->toArray();
+            $totalPrice = $cart->items()->sum('total_price');
+
+            $subTotal = round($totalPrice);
+            $totalTax = round($totalPrice * 0.12);
+            $grossAmount = $subTotal + $totalTax;
+
+            $cart->sub_total = $subTotal;
+            $cart->total_tax = $totalTax;
+            $cart->total_price = $grossAmount;
+            $cart->save();
+
+            return compact('cart');
         });
     }
 
@@ -99,5 +138,37 @@ class CartController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function addToCart(Request $request)
+    {
+        $carts = DB::transaction(function () use ($request) {
+            $request->validate([
+                'quantity' => ['required', 'integer'],
+            ]);
+
+            $cart = Cart::updateOrCreate([
+                'customer_id' => $request->customer_id,
+            ], [
+                'customer_name' => Auth::user()->name ?? 'Customer',
+                'user_id' => $request->user_id,
+            ]);
+
+            $product = Product::findOrFail($request->product_id);
+
+            $cart->items()->updateOrCreate(['cart_id' => $cart->id, 'product_id' => $request->product_id], [
+                'product_id' => $request->product_id,
+                'product_name' => $product->name,
+                'price_per_unit' => $product->price,
+                'quantity' => $request->quantity,
+                'total_price' => $request->quantity * $product->price,
+            ]);
+
+            $totalPrice = $cart->items()->sum('total_price');
+            $cart->sub_total = round($totalPrice);
+            $cart->total_tax = round($totalPrice * 0.12);
+            $cart->total_price = $cart->sub_total + $cart->total_tax;
+            $cart->save();
+        });
     }
 }

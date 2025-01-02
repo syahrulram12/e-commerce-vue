@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\CustomerController;
 use Illuminate\Http\Request;
@@ -22,20 +23,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
     Route::post('/update-profile', [CustomerController::class, 'updateProfile']);
-    Route::apiResources([
-
-        'cart' => 'API\CartController',
-    ]);
+    // Route::apiResources([
+    //     'cart' => 'API\CartController',
+    // ]);
 });
-
-Route::get('/order', [OrderController::class, 'index'])->name('order.index');
-Route::post('/order', [OrderController::class, 'store'])->name('order.create');
-Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
 
 Route::apiResources([
     'order' => 'API\OrderController',
+    'cart' => 'API\CartController',
     'product' => 'API\ProductController',
     'category' => 'API\CategoryController',
 ]);
 
+Route::post('/cart/add-to-cart', [CartController::class, 'addToCart']);
 Route::post('/midtrans-callback', [OrderController::class, 'midtransCallback']);
