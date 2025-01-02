@@ -1,0 +1,13 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+@import "./core/components.scss";
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap";
+@import "~bootstrap-vue";
+
+//Custom
+@import "./core/custom-rtl.scss";
