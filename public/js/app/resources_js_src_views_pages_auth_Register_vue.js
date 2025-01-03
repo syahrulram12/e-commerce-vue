@@ -87,9 +87,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }
           // Handle login logic here
           (0,_services_spa_auth__WEBPACK_IMPORTED_MODULE_4__.register)(vForm).then(function (response) {
-            _this.$bvToast.toast("Register success", {
+            _this.$bvToast.toast("".concat(_this.formData.name, " updated successfully"), {
               title: "Success",
-              variant: "success"
+              variant: "primary",
+              toaster: "b-toaster-top-center",
+              solid: true
             });
           })["catch"](function (error) {
             if (error.response.data.errors) {
@@ -123,9 +125,9 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "d-flex justify-content-center align-items-center h-100"
+    staticClass: "d-flex justify-content-center align-items-center h-full"
   }, [_c("div", {
-    staticClass: "container-fluid rounded-lg shadow-lg px-5 pt-4 pb-5"
+    staticClass: "register-container container-fluid rounded-lg shadow-lg px-5 pt-4 pb-5"
   }, [_c("h2", {
     staticClass: "text-left font-weight-bold pb-3 pt-2"
   }, [_vm._v("Login")]), _vm._v(" "), _c("ValidationObserver", {
@@ -730,7 +732,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.login-container[data-v-25e06f85] {\r\n  width: 50%;\r\n  max-width: 700px;\r\n  margin: 0 auto;\r\n  border: 1px solid #ccc;\r\n  border-radius: 5px;\n}\n.form-group[data-v-25e06f85] {\r\n  margin-bottom: 15px;\n}\nlabel[data-v-25e06f85] {\r\n  display: block;\r\n  margin-bottom: 5px;\n}\ninput[data-v-25e06f85] {\r\n  width: 100%;\r\n  padding: 8px;\r\n  box-sizing: border-box;\n}\nbutton[data-v-25e06f85] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  background-color: #007bff;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 5px;\r\n  cursor: pointer;\n}\nbutton[data-v-25e06f85]:hover {\r\n  background-color: #0056b3;\n}\n@media (max-width: 768px) {\n.login-container[data-v-25e06f85] {\r\n    width: 90%;\n}\nbutton[data-v-25e06f85] {\r\n    padding: 8px;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.register-container[data-v-25e06f85] {\r\n  width: 100%;\r\n  height: -moz-max-content;\r\n  height: max-content;\r\n  max-width: 700px;\r\n  margin: 0 auto;\r\n  border: 1px solid #ccc;\r\n  border-radius: 5px;\n}\n.form-group[data-v-25e06f85] {\r\n  margin-bottom: 15px;\n}\nlabel[data-v-25e06f85] {\r\n  display: block;\r\n  margin-bottom: 5px;\n}\ninput[data-v-25e06f85] {\r\n  width: 100%;\r\n  padding: 8px;\r\n  box-sizing: border-box;\n}\nbutton[data-v-25e06f85] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  background-color: #007bff;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 5px;\r\n  cursor: pointer;\n}\nbutton[data-v-25e06f85]:hover {\r\n  background-color: #0056b3;\n}\n@media (max-width: 768px) {\n.login-container[data-v-25e06f85] {\r\n    width: 90%;\n}\nbutton[data-v-25e06f85] {\r\n    padding: 8px;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

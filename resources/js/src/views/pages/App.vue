@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper">
+  <div id="app" class="content-wrapper">
     <component :is="defineLayout()">
       <router-view />
     </component>
@@ -29,7 +29,7 @@ export default {
 
 <style>
 .content-wrapper {
-  overflow-x: auto;
-  height: 100%;
+  height: 100vh;
+  overflow: auto;
 }
 </style>

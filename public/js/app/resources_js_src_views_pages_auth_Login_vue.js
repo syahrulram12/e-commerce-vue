@@ -43,7 +43,7 @@ __webpack_require__.r(__webpack_exports__);
           // Handle login logic here
           axios.post("/login", vForm).then(function (response) {
             // Store Auth User
-            localStorage.setItem("authUser", JSON.stringify(response.data));
+            localStorage.setItem("authUser", JSON.stringify(response.data.user));
             // Redirect to dashboard
             _this.$router.push({
               name: "admin-dashboard"

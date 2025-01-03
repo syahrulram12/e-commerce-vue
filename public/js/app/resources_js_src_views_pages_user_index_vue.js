@@ -114,7 +114,7 @@ var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "h-full"
+    staticClass: "register-container"
   }, [_vm._m(0), _vm._v(" "), _c("section", [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "product-list bg-light d-flex text-dark m-0 overflow-hidden p-4"
   }, [_c("b-row", {
@@ -157,7 +157,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("header", [_c("section", {
+  return _c("section", {
     staticClass: "jumbotron jumbotron-section position-relative rounded-0 m-0"
   }, [_c("div", {
     staticClass: "overlay"
@@ -174,9 +174,9 @@ var staticRenderFns = [function () {
     staticClass: "font-weight-bolder"
   }, [_vm._v("Welcome to Our E-commerce Store!")]), _vm._v(" "), _c("p", {
     staticClass: "jumbotron-text font-weight-light"
-  }, [_vm._v("\n          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor\n          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.ss\n        ")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor\n        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.ss\n      ")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary"
-  }, [_vm._v("Shop Now")])])])]);
+  }, [_vm._v("Shop Now")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -244,7 +244,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.product-list[data-v-04ffad43] {\r\n  margin: 20px 0;\n}\n.products[data-v-04ffad43] {\r\n  display: flex;\r\n  height: 100%;\r\n  flex-wrap: wrap;\r\n  justify-content: center;\r\n  align-items: center;\n}\n.product[data-v-04ffad43] {\r\n  border: 1px solid #ccc;\r\n  margin: 10px;\r\n  padding: 10px;\r\n  width: 200px;\n}\nfooter[data-v-04ffad43] {\r\n  margin-top: 20px;\r\n  padding: 10px;\r\n  background-color: #f1f1f1;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.register-container[data-v-04ffad43] {\r\n  width: 100%;\r\n  height: -moz-max-content;\r\n  height: max-content;\r\n  margin: 0 auto;\r\n  border: 1px solid #ccc;\r\n  border-radius: 5px;\n}\n.product-list[data-v-04ffad43] {\r\n  margin: 20px 0;\n}\n.products[data-v-04ffad43] {\r\n  display: flex;\r\n  height: 100%;\r\n  flex-wrap: wrap;\r\n  justify-content: center;\r\n  align-items: center;\n}\n.product[data-v-04ffad43] {\r\n  border: 1px solid #ccc;\r\n  margin: 10px;\r\n  padding: 10px;\r\n  width: 200px;\n}\nfooter[data-v-04ffad43] {\r\n  margin-top: 20px;\r\n  padding: 10px;\r\n  background-color: #f1f1f1;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

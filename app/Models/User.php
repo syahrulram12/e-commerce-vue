@@ -46,6 +46,6 @@ class User extends Authenticatable
 
     public function getCustomerNameAttribute()
     {
-        return Customer::where('usert_id', $this->id)->first()->name ?? 'Customer';
+        return Customer::where('user_id', $this->id)->first()->name ?? 'Customer';
     }
 }

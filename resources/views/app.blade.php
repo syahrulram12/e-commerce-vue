@@ -18,18 +18,13 @@
     </script>
 </head>
 <style>
+    html,
     body {
-        overflow: hidden;
-        height: 100vh;
-        font-family: 'Nunito', sans-serif;
+        height: 100%;
+        margin: 0;
     }
-
-    .h-full {
-        height: 100vh;
-    }
-
-    .app {
-        overflow: auto;
+    #wrapper {
+        min-height: 100%;
     }
 </style>
 
@@ -45,7 +40,7 @@
     </div>
 
 
-    <div id="app" class="app"></div>
+    <div id="app"></div>
     <script src="{{ asset(mix('js/app.js')) }}"></script>
 </body>
 

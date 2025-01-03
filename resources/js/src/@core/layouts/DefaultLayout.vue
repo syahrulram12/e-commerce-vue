@@ -1,5 +1,5 @@
 <template>
-  <div class="public-layout">
+  <div class="h-full">
     <b-navbar toggleable="lg" type="light" variant="light">
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -31,7 +31,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item>
-            <b-link>
+            <b-link :to="{ name: 'cart' }">
               <feather-icon
                 icon="ShoppingCartIcon"
                 size="16"
@@ -40,13 +40,13 @@
             </b-link>
           </b-nav-item>
 
-          <b-nav-item-dropdown v-if="authUser" right>
+          <b-nav-item-dropdown v-if="user" right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <em>User</em>
+              <span>{{ user.customer_name }}</span>
             </template>
             <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <template v-else>
             <b-nav-item>
@@ -62,60 +62,61 @@
       </b-collapse>
     </b-navbar>
 
-    <main>
+    <main class="h-full">
       <transition name="fade" mode="out-in">
         <slot></slot>
       </transition>
+      <footer>
+        <slot name="footer">
+          <div class="footer-content border-top">
+            <b-row>
+              <b-col class="text-justify">
+                <h5 class="font-weight-bold">Address</h5>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
+                  aspernatur illo possimus, cum, itaque ratione eveniet mollitia laborum
+                  ducimus iure provident iusto dolores, neque quod ex deleniti debitis
+                  similique! Obcaecati.
+                </p>
+              </b-col>
+              <b-col class="text-left">
+                <h5 class="font-weight-bold">Company</h5>
+                <b-link class="text-dark" :to="{ name: 'about-us' }">About Us</b-link
+                ><br />
+                <b-link class="text-dark" :to="{ name: 'contact' }">Contact</b-link>
+              </b-col>
+              <b-col class="text-left">
+                <h5 class="font-weight-bold">Our Help</h5>
+                <b-link class="text-dark" :to="{ name: 'faq' }">FAQ</b-link><br />
+              </b-col>
+            </b-row>
+            <b-row class="d-flex">
+              <b-col class="text-left">
+                Our Social Media <br />
+                <b-link href="https://facebook.com" target="_blank">
+                  <feather-icon icon="FacebookIcon" size="16" class="mx-2 text-body" />
+                </b-link>
+                <b-link href="https://twitter.com" target="_blank">
+                  <feather-icon icon="TwitterIcon" size="16" class="mx-2 text-body" />
+                </b-link>
+                <b-link href="https://instagram.com" target="_blank">
+                  <feather-icon icon="InstagramIcon" size="16" class="mx-2 text-body" />
+                </b-link>
+                <b-link href="https://linkedin.com" target="_blank">
+                  <feather-icon icon="LinkedinIcon" size="16" class="mx-2 text-body" />
+                </b-link>
+              </b-col>
+            </b-row>
+          </div>
+        </slot>
+      </footer>
     </main>
-
-    <footer>
-      <slot name="footer">
-        <div class="footer-content border-top">
-          <b-row>
-            <b-col class="text-justify">
-              <h5 class="font-weight-bold">Address</h5>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni aspernatur
-                illo possimus, cum, itaque ratione eveniet mollitia laborum ducimus iure
-                provident iusto dolores, neque quod ex deleniti debitis similique!
-                Obcaecati.
-              </p>
-            </b-col>
-            <b-col class="text-left">
-              <h5 class="font-weight-bold">Company</h5>
-              <b-link class="text-dark" :to="{ name: 'about-us' }">About Us</b-link><br />
-              <b-link class="text-dark" :to="{ name: 'contact' }">Contact</b-link>
-            </b-col>
-            <b-col class="text-left">
-              <h5 class="font-weight-bold">Our Help</h5>
-              <b-link class="text-dark" :to="{ name: 'faq' }">FAQ</b-link><br />
-            </b-col>
-          </b-row>
-          <b-row class="d-flex">
-            <b-col class="text-left">
-              Our Social Media <br />
-              <b-link href="https://facebook.com" target="_blank">
-                <feather-icon icon="FacebookIcon" size="16" class="mx-2 text-body" />
-              </b-link>
-              <b-link href="https://twitter.com" target="_blank">
-                <feather-icon icon="TwitterIcon" size="16" class="mx-2 text-body" />
-              </b-link>
-              <b-link href="https://instagram.com" target="_blank">
-                <feather-icon icon="InstagramIcon" size="16" class="mx-2 text-body" />
-              </b-link>
-              <b-link href="https://linkedin.com" target="_blank">
-                <feather-icon icon="LinkedinIcon" size="16" class="mx-2 text-body" />
-              </b-link>
-            </b-col>
-          </b-row>
-        </div>
-      </slot>
-    </footer>
   </div>
 </template>
 
 <script>
 import { getAuthUser } from "@/auth/utils";
+import httpService from "@core/libs/network-service";
 import { getList } from "@/services/api/category";
 import {
   BNavbarBrand,
@@ -130,7 +131,6 @@ import {
   BButton,
   BDropdownItem,
 } from "bootstrap-vue";
-import { replace } from "lodash";
 
 export default {
   components: {
@@ -148,6 +148,7 @@ export default {
   },
   created() {
     this.getCategories();
+    console.log(this.user);
   },
   methods: {
     async getCategories(slug = "", perPage = 10, page = 1) {
@@ -162,11 +163,23 @@ export default {
         console.log(error);
       }
     },
+    logout() {
+      httpService
+        .logout()
+        .then((response) => {
+          localStorage.removeItem("authUser");
+          this.$router.replace({ name: "login" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   setup() {
-    const authUser = getAuthUser();
-
-    return { authUser };
+    const user = getAuthUser();
+    return {
+      user,
+    };
   },
   data() {
     const categories = [];
@@ -179,15 +192,9 @@ export default {
 </script>
 
 <style scoped>
-.public-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
 main {
   flex: 1;
-  min-height: 30rem;
+  min-height: 100%;
 }
 
 header {

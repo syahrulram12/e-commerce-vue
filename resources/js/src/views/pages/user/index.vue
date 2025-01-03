@@ -1,25 +1,23 @@
 <template>
-  <div class="h-full">
-    <header>
-      <section class="jumbotron jumbotron-section position-relative rounded-0 m-0">
-        <div class="overlay"></div>
-        <img
-          src="http://127.0.0.1:8000/images/product_jumbotron.png"
-          alt="E-commerce Store"
-          class=""
-          height="100%"
-          width="100%"
-        />
-        <div class="jumbotron-content">
-          <h1 class="font-weight-bolder">Welcome to Our E-commerce Store!</h1>
-          <p class="jumbotron-text font-weight-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.ss
-          </p>
-          <button class="btn btn-secondary">Shop Now</button>
-        </div>
-      </section>
-    </header>
+  <div class="register-container">
+    <section class="jumbotron jumbotron-section position-relative rounded-0 m-0">
+      <div class="overlay"></div>
+      <img
+        src="http://127.0.0.1:8000/images/product_jumbotron.png"
+        alt="E-commerce Store"
+        class=""
+        height="100%"
+        width="100%"
+      />
+      <div class="jumbotron-content">
+        <h1 class="font-weight-bolder">Welcome to Our E-commerce Store!</h1>
+        <p class="jumbotron-text font-weight-light">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.ss
+        </p>
+        <button class="btn btn-secondary">Shop Now</button>
+      </div>
+    </section>
     <section>
       <div class="text-left bg-dark text-light p-3 section-header">
         <h2>New Product!</h2>
@@ -111,6 +109,13 @@ export default {
 </script>
 
 <style scoped>
+.register-container {
+  width: 100%;
+  height: max-content;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .product-list {
   margin: 20px 0;
 }

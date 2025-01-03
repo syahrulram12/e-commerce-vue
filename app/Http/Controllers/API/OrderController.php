@@ -44,17 +44,27 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $transcation = DB::transaction(function () use ($request) {
-            if (request()->get('cart_id')) {
-                $searchQuery = ['cart_id' => $request->get('cart_id')];
-            } else {
-                $searchQuery = ['order_id' => $request->get('order_id')];
+        $transaction = DB::transaction(function () use ($request) {
+
+            $updateOrder = [
+                'customer_id' => $request->get('customer_id'),
+                'customer_name' => $request->get('customer_name'),
+                'customer_email' => $request->get('customer_email'),
+                'customer_phone' => $request->get('customer_phone'),
+                'customer_address' => $request->get('customer_address'),
+                'status' => 'WAITING_PAYMENT',
+            ];
+
+            if (empty($request->get('id'))) {
+                $updateOrder = array_merge($updateOrder, ['order_number' => 'ORD' . Carbon::now()->timestamp]);
             }
 
-            $order = Order::updateOrCreate($searchQuery, [
-                'order_number' => 'ORD-' . time(),
-                'status' => 'WAITING_PAYMENT',
-            ]);
+            $order = Order::updateOrCreate(
+                [
+                    'id' => $request->get('id'),
+                ],
+                $updateOrder
+            );
 
             foreach ($request->get('items') as $key => $item) {
                 $product = Product::findOrFail($item['product_id']);
@@ -98,6 +108,7 @@ class OrderController extends Controller
                     'category' => 'TAX',
                 ]
             ]);
+
             if (!$order->snap_token) {
                 $params = [
                     'transaction_details' => [
@@ -119,10 +130,13 @@ class OrderController extends Controller
                 $snapToken = $order->snap_token;
             }
 
-            return compact('snapToken');
+            return compact('order', 'snapToken');
         });
 
-        return response()->json(['token' => $transcation['snapToken']]);
+        return response()->json([
+            'order' => $transaction['order'],
+            'snap_token' => $transaction['snapToken'],
+        ]);
     }
 
     /**

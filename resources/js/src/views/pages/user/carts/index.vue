@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading && Object.keys(cartItems).length > 0">
+  <div v-if="!loading && Object.keys(cartItems).length > 0" class="position-relative h-full">
     <section class="product-detail-section position-relative z-1">
       <div class="jumbotron d-flex rounded-0 h-full" style="flex-direction: column">
         <div class="overlay"></div>
@@ -28,7 +28,7 @@
       </div>
     </section>
     <b-container class="my-2">
-      <b-row>
+      <b-row class="my-auto">
         <b-col>
           <b-table
             striped
@@ -73,7 +73,11 @@
 <script>
 import { getList } from "@/services/api/cart";
 import { deleteItem } from "@/services/api/cart";
+import { BContainer } from "bootstrap-vue";
 export default {
+  components: {
+    BContainer,
+  },
   data() {
     const cart = {};
     const cartItems = [];

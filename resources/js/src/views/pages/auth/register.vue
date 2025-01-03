@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center h-100">
-    <div class="container-fluid rounded-lg shadow-lg px-5 pt-4 pb-5">
+  <div class="d-flex justify-content-center align-items-center h-full">
+    <div class="register-container container-fluid rounded-lg shadow-lg px-5 pt-4 pb-5">
       <h2 class="text-left font-weight-bold pb-3 pt-2">Login</h2>
       <ValidationObserver ref="loginForm" v-slot="{ invalid }">
         <form @submit.prevent="handleLogin">
@@ -229,9 +229,11 @@ export default {
           // Handle login logic here
           register(vForm)
             .then((response) => {
-              this.$bvToast.toast("Register success", {
-                title: "Success",
-                variant: "success",
+              this.$bvToast.toast(`${this.formData.name} updated successfully`, {
+                title: `Success`,
+                variant: "primary",
+                toaster: "b-toaster-top-center",
+                solid: true,
               });
             })
             .catch((error) => {
@@ -254,8 +256,9 @@ export default {
 </style>
 
 <style scoped>
-.login-container {
-  width: 50%;
+.register-container {
+  width: 100%;
+  height: max-content;
   max-width: 700px;
   margin: 0 auto;
   border: 1px solid #ccc;

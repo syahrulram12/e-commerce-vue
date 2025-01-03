@@ -2,6 +2,14 @@
     width: 100%;
 }
 
+.h-full {
+    height: 100%;
+}
+
+h-fit{
+    height: fit-content;
+}
+
 .product-card {
     height: 300px;
 
@@ -26,10 +34,6 @@ section {
 
 .mouse-pointer {
     cursor: pointer;
-}
-
-.h-full {
-    height: 100%;
 }
 
 .translate-enter-active,

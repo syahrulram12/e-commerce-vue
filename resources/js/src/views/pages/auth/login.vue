@@ -89,7 +89,7 @@ export default {
             .post("/login", vForm)
             .then((response) => {
               // Store Auth User
-              localStorage.setItem("authUser", JSON.stringify(response.data));
+              localStorage.setItem("authUser", JSON.stringify(response.data.user));
               // Redirect to dashboard
               this.$router.push({ name: "admin-dashboard" });
             })
