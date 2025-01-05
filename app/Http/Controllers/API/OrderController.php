@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Models\Cart;
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\Product;
@@ -33,7 +35,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $perPage = request()->get('per_page', 10);
+        return response()->json(Order::orderBy('created_at', 'desc')->paginate($perPage)->withQueryString());
     }
 
     /**
@@ -45,34 +48,19 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $transaction = DB::transaction(function () use ($request) {
+            $customer = Customer::find($request->user()->id);
 
-            $updateOrder = [
-                'customer_id' => $request->get('customer_id'),
-                'customer_name' => $request->get('customer_name'),
-                'customer_email' => $request->get('customer_email'),
-                'customer_phone' => $request->get('customer_phone'),
-                'customer_address' => $request->get('customer_address'),
-                'status' => 'WAITING_PAYMENT',
-            ];
-
-            if (empty($request->get('id'))) {
-                $updateOrder = array_merge($updateOrder, ['order_number' => 'ORD' . Carbon::now()->timestamp]);
-            }
-
-            $order = Order::updateOrCreate(
-                [
-                    'id' => $request->get('id'),
-                ],
-                $updateOrder
-            );
+            $order = Order::create([
+                'customer_id' => $customer->id,
+                'order_number' => 'ORD' . Carbon::now()->timestamp,
+                'customer_name' => $customer->name,
+                'order_created' => Carbon::now(),
+            ]);
 
             foreach ($request->get('items') as $key => $item) {
                 $product = Product::findOrFail($item['product_id']);
                 $totalPriceItem = $product->price * $item['quantity'];
-                $order->items()->updateOrCreate([
-                    'order_id' => $order->id,
-                    'product_id' => $item['product_id'],
-                ], [
+                $order->items()->create([
                     'price_per_unit' => $product->price,
                     'quantity' => $item['quantity'],
                     'total_price' => $totalPriceItem
@@ -108,35 +96,11 @@ class OrderController extends Controller
                     'category' => 'TAX',
                 ]
             ]);
+            $order->save();
 
-            if (!$order->snap_token) {
-                $params = [
-                    'transaction_details' => [
-                        'order_id' => $order->order_number,
-                        'gross_amount' => $order->total_price,
-                    ],
-                    'item_details' => $orderItems,
-                    'customer_details' => [
-                        'first_name' => "Test Midtrans",
-                        'email' => "test@midtrans.com"
-                    ],
-                ];
-
-                $snapToken = Snap::getSnapToken($params);
-
-                $order->snap_token = $snapToken;
-                $order->save();
-            } else {
-                $snapToken = $order->snap_token;
-            }
-
-            return compact('order', 'snapToken');
+            return compact('order');
         });
-
-        return response()->json([
-            'order' => $transaction['order'],
-            'snap_token' => $transaction['snapToken'],
-        ]);
+        return response()->json(['message' => 'Order created successfully', 'data' => new OrderResource($transaction['order'])]);
     }
 
     /**
@@ -163,6 +127,43 @@ class OrderController extends Controller
         //
     }
 
+    public function generateSnapToken(Order $order)
+    {
+
+        $customer = Customer::find($order->customer_id);
+
+        $orderItems = $order->items()->get()->map(function ($item) {
+            return [
+                'id' => 'Product' . '_' . $item->id,
+                'name' => $item->product->name,
+                'price' => (int) $item->price_per_unit,
+                'quantity' => $item->quantity,
+                'category' => $item->product->category_name,
+            ];
+        })->toArray();
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => $order->total_price,
+            ],
+            'item_details' => $orderItems,
+            'customer_details' => [
+                'first_name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+            ],
+            'shipping_address' => [
+                'first_name' => $customer->name,
+                'phone' => $customer->phone,
+                'address' => $customer->address,
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+        $order->snap_token = $snapToken;
+        $order->save();
+    }
 
     public function midtransCallback(Request $request)
     {
@@ -180,7 +181,7 @@ class OrderController extends Controller
 
         DB::transaction(function () use ($notification, $transaction, $type, $fraud) {
             $order = Order::where('order_number', $notification->order_id)->first();
-
+            $order->transaction_id = $notification->transaction_id;
             if ($transaction == 'capture') {
                 if ($type == 'credit_card') {
                     if ($fraud == 'challenge') {
@@ -253,5 +254,35 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json($snapToken);
+    }
+
+    public function cancelOrder(Request $request)
+    {
+        $order = Order::findOrFail($request->get('order_id'));
+
+        if ($order->status != 'PENDING') {
+            return response()->json(['message' => 'Order cannot be cancelled'], 400);
+        }
+
+        $response = Http::withBasicAuth(config('midtrans.server_key'), '')
+            ->post('https://api.midtrans.com/v2/' . $order->order_number . '/cancel');
+
+        if ($response->successful()) {
+            $order->status = 'CANCELLED';
+            $order->save();
+
+            OrderHistory::insert([
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'transaction_status' => 'CANCELLED',
+                'transaction_id' => $response->json('transaction_id'),
+                'transaction_time' => now(),
+                'bank' => $response->json('payment_type'),
+            ]);
+
+            return response()->json(['message' => 'Order cancelled successfully']);
+        }
+
+        return response()->json(['message' => 'Failed to cancel order'], 500);
     }
 }

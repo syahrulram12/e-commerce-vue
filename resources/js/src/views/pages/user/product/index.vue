@@ -15,9 +15,9 @@
       </div>
       <b-row v-else-if="products.length > 0" class="mb-5">
         <b-col
-          cols="4"
+          cols="6"
           md="4"
-          sm="6"
+          lg="4"
           class="py-2"
           v-for="product in products"
           :key="product.id"

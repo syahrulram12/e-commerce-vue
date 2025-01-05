@@ -459,8 +459,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   url: () => (/* binding */ url)
 /* harmony export */ });
 /* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vee-validate/dist/rules */ "./node_modules/vee-validate/dist/rules.js");
-/* harmony import */ var vee_validate_dist_locale_id_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate/dist/locale/id.json */ "./node_modules/vee-validate/dist/locale/id.json");
+/* harmony import */ var vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate/dist/rules */ "./node_modules/vee-validate/dist/rules.js");
 /* harmony import */ var _validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validators */ "./resources/js/src/@core/utils/validations/validators.js");
 
 
@@ -473,28 +472,24 @@ __webpack_require__.r(__webpack_exports__);
 // General
 // ////////////////////////////////////////////////////////
 
-(0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.localize)({
-  en: {
-    messages: vee_validate_dist_locale_id_json__WEBPACK_IMPORTED_MODULE_2__.messages
-  }
-});
-var required = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.required);
-var email = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("email", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.email);
-var min = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.min);
-var max = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.max);
-var min_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.min_value);
-var max_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.max_value);
-var confirmed = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("confirmed", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.confirmed);
-var required_if = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required_if", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.required_if);
-var regex = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("regex", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.regex);
-var between = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("between", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.between);
-var alpha = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha);
-var integer = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("integer", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.integer);
-var digits = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("digits", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.digits);
-var alphaDash = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-dash", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha_dash);
-var alphaNum = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-num", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha_num);
-var length = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("length", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.length);
-var numeric = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("numeric", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.numeric);
+(0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.localize)("en");
+var required = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.required);
+var email = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("email", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.email);
+var min = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.min);
+var max = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.max);
+var min_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.min_value);
+var max_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.max_value);
+var confirmed = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("confirmed", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.confirmed);
+var required_if = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required_if", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.required_if);
+var regex = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("regex", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.regex);
+var between = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("between", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.between);
+var alpha = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha);
+var integer = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("integer", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.integer);
+var digits = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("digits", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.digits);
+var alphaDash = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-dash", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha_dash);
+var alphaNum = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-num", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha_num);
+var length = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("length", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.length);
+var numeric = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("numeric", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.numeric);
 var positive = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("positive", {
   validate: _validators__WEBPACK_IMPORTED_MODULE_0__.validatorPositive,
   message: "Masukkan Angka Positif!"
@@ -598,7 +593,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getList: () => (/* binding */ getList),
 /* harmony export */   postData: () => (/* binding */ postData)
 /* harmony export */ });
-/* harmony import */ var _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/libs/network-service */ "./resources/js/src/@core/libs/network-service.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 
 var resourcePath = "/api/cart";
 var getList = function getList() {
@@ -606,30 +601,30 @@ var getList = function getList() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
     args[_key] = arguments[_key];
   }
-  return (_httpService$getHttp = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
+  return (_httpService$getHttp = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
 };
 var postData = function postData() {
   var _httpService$getHttp2;
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
     args[_key2] = arguments[_key2];
   }
-  return (_httpService$getHttp2 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
+  return (_httpService$getHttp2 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
 };
 var getDetail = function getDetail(slug) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(slug));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(slug));
 };
 var deleteData = function deleteData(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
 };
 var deleteItem = function deleteItem(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/delete-item/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/delete-item/").concat(id));
 };
 var addToCart = function addToCart() {
   var _httpService$getHttp3;
   for (var _len3 = arguments.length, data = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
     data[_key3] = arguments[_key3];
   }
-  return (_httpService$getHttp3 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp3, ["".concat(resourcePath, "/add-to-cart")].concat(data));
+  return (_httpService$getHttp3 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp3, ["".concat(resourcePath, "/add-to-cart")].concat(data));
 };
 
 /***/ }),
@@ -647,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getList: () => (/* binding */ getList),
 /* harmony export */   postData: () => (/* binding */ postData)
 /* harmony export */ });
-/* harmony import */ var _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/libs/network-service */ "./resources/js/src/@core/libs/network-service.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 
 var resourcePath = "/api/product";
 var getList = function getList() {
@@ -655,20 +650,20 @@ var getList = function getList() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
     args[_key] = arguments[_key];
   }
-  return (_httpService$getHttp = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
+  return (_httpService$getHttp = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
 };
 var postData = function postData() {
   var _httpService$getHttp2;
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
     args[_key2] = arguments[_key2];
   }
-  return (_httpService$getHttp2 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
+  return (_httpService$getHttp2 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
 };
 var getDetail = function getDetail(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(id));
 };
 var deleteData = function deleteData(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
 };
 
 /***/ }),
@@ -3640,16 +3635,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_detail_vue_vue_type_style_index_0_id_0b64bcd0_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/style-loader/dist/cjs.js!../../../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./detail.vue?vue&type=style&index=0&id=0b64bcd0&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/src/views/pages/user/product/detail.vue?vue&type=style&index=0&id=0b64bcd0&scoped=true&lang=css");
 
-
-/***/ }),
-
-/***/ "./node_modules/vee-validate/dist/locale/id.json":
-/*!*******************************************************!*\
-  !*** ./node_modules/vee-validate/dist/locale/id.json ***!
-  \*******************************************************/
-/***/ ((module) => {
-
-module.exports = /*#__PURE__*/JSON.parse('{"code":"id","messages":{"alpha":"{_field_} hanya boleh mengandung karakter alfabet","alpha_num":"{_field_} hanya boleh mengandung karakter alfanumerik","alpha_dash":"{_field_} boleh mengandung karakter alfanumerik, tanda hubung, dan garis bawah","alpha_spaces":"{_field_} hanya boleh berisi karakter alfabet serta spasi","between":"{_field_} harus di antara {min} dan {max}","confirmed":"{_field_} tidak cocok dengan {target}","digits":"{_field_} harus berupa {length} digit angka","dimensions":"{_field_} harus berdimensi lebar {width} pixel dan tinggi {height} pixel","email":"{_field_} harus berupa alamat surel yang benar","excluded":"{_field_} harus berupa nilai yang sah","ext":"{_field_} harus berupa berkas yang benar","image":"{_field_} harus berupa gambar","integer":"{_field_} harus berupa bilangan bulat","length":"Panjang {_field_} harus tepat {length}","max_value":"Nilai {_field_} tidak boleh lebih dari {max}","max":"{_field_} tidak boleh lebih dari {length} karakter","mimes":"Tipe berkas {_field_} harus benar","min_value":"Nilai {_field_} tidak boleh kurang dari {min}","min":"{_field_} minimal mengandung {length} karakter","numeric":"{_field_} harus berupa angka","oneOf":"{_field_} harus berupa nilai yang sah","regex":"Format {_field_} salah","required":"{_field_} harus diisi","required_if":"{_field_} harus diisi","size":"{_field_} harus lebih kecil dari {size}KB","double":"{_field_} harus berupa desimal yang valid"}}');
 
 /***/ })
 

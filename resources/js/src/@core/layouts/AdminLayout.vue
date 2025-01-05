@@ -124,7 +124,7 @@
   </div>
 </template>
 <script>
-import httpService from "@core/libs/network-service";
+import httpService from "@/services/network-service";
 import { getAuthUser } from "@/auth/utils";
 import {
   BButton,

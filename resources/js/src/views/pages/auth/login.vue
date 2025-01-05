@@ -58,6 +58,7 @@
 
 <script>
 import { ValidationProvider, ValidationObserver } from "vee-validate";
+import apiService from "@/services/network-service";
 import { required, email } from "@validations";
 import { BFormInput, BButton } from "bootstrap-vue";
 
@@ -81,21 +82,29 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
+          this.buttonLoading = true;
           const vForm = new FormData();
           vForm.append("email", this.userEmail);
           vForm.append("password", this.userPassword);
-          // Handle login logic here
-          axios
-            .post("/login", vForm)
+          apiService
+            .login(vForm)
             .then((response) => {
+              this.buttonLoading = false;
               // Store Auth User
               localStorage.setItem("authUser", JSON.stringify(response.data.user));
+              localStorage.setItem("authToken", response.data.token);
               // Redirect to dashboard
-              this.$router.push({ name: "admin-dashboard" });
+              this.$bvToast.toast("Login Successful", {
+                title: "Success",
+                variant: "success",
+                solid: true,
+                time: 3000,
+              });
+              this.$router.push({ name: "home" });
             })
             .catch((error) => {
+              console.log(error.response.data.errors);
               if (error.response.data.errors) {
-                console.log(error.response.data.errors);
                 this.$refs.loginForm.setErrors(error.response.data.errors);
               } else {
                 this.$refs.loginForm.setErrors(error.response.data);
@@ -112,7 +121,7 @@ export default {
 <style scoped>
 .login-container {
   width: 50%;
-  max-width: 700px;
+  max-width: 500px;
   margin: 0 auto;
   border: 1px solid #ccc;
   border-radius: 5px;

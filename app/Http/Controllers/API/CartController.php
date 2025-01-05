@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -54,54 +55,7 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $carts = DB::transaction(function () use ($request) {
-            $cart = Cart::updateOrCreate([
-                'customer_id' => $request->customer_id,
-            ], [
-                'customer_name' => Auth::user()->name ?? 'Customer',
-                'product_id' => $request->product_id,
-                'user_id' => $request->user_id,
-            ]);
-
-            foreach ($request->get('items') as $key => $item) {
-                $product = Product::findOrFail($item['product_id']);
-                $totalPriceItem = $product->price * $item['quantity'];
-                $cart->items()->updateOrCreate([
-                    'cart_id' => $cart->id,
-                    'product_id' => $item['product_id'],
-                ], [
-                    'product_name' => $product->name,
-                    'price_per_unit' => $product->price,
-                    'quantity' => $item['quantity'],
-                    'total_price' => $totalPriceItem
-                ]);
-            }
-
-            $cartItems = $cart->items()->get()->map(function ($item) {
-                return [
-                    'id' => 'Product' . '_' . $item->id,
-                    'name' => $item->product->name,
-                    'price' => (int) $item->price_per_unit,
-                    'quantity' => $item->quantity,
-                    'category' => $item->product->category_name,
-                ];
-            })->toArray();
-            $totalPrice = $cart->items()->sum('total_price');
-
-            $subTotal = round($totalPrice);
-            $totalTax = round($totalPrice * 0.12);
-            $grossAmount = $subTotal + $totalTax;
-
-            $cart->sub_total = $subTotal;
-            $cart->total_tax = $totalTax;
-            $cart->total_price = $grossAmount;
-            $cart->save();
-
-            return compact('cart');
-        });
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.

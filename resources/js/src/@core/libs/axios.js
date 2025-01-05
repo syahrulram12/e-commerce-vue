@@ -1,15 +1,19 @@
 import Vue from "vue";
 
-// axios
-import axios from "axios";
-
-const axiosIns = axios.create({
+const apiConfig = {
     headers: { Accept: "application/json" },
     withCredentials: true,
-});
+};
 
-Vue.prototype.$http = axiosIns;
+const webConfig = {
+    headers: { Accept: "application/json" },
+    withCredentials: true,
+};
 
-export default axiosIns;
+const axiosApiIns = axios.create(apiConfig);
+const axiosWebIns = axios.create(webConfig);
 
+Vue.prototype.$apiHttp = axiosApiIns;
+Vue.prototype.$webHttp = axiosWebIns;
 
+export { axiosApiIns, axiosWebIns };

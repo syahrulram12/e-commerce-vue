@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrderController;
-use App\Http\Controllers\API\CustomerController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,26 +18,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-    Route::post('/update-profile', [CustomerController::class, 'updateProfile']);
-    // Route::apiResources([
-    //     'cart' => 'API\CartController',
-    // ]);
+    Route::get('/auth-user', [AuthController::class, 'getAuthUser']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('/cart/add-to-cart', [CartController::class, 'addToCart']);
+    Route::delete('/cart/delete-item/{id}', [CartController::class, 'deleteItem']);
+    Route::apiResources([
+        'order' => 'API\OrderController',
+        'cart' => 'API\CartController',
+    ]);
 });
 
-Route::apiResources([
-    'order' => 'API\OrderController',
-    'cart' => 'API\CartController',
-    'product' => 'API\ProductController',
-    'category' => 'API\CategoryController',
-]);
-
-Route::post('/cart/add-to-cart', [CartController::class, 'addToCart']);
-Route::delete('/cart/delete-item/{id}', [CartController::class, 'deleteItem']);
-
+Route::get('/product', [ProductController::class, 'index']);
+Route::get('/product/{slug}', [ProductController::class, 'show']);
+Route::get('/category', [CategoryController::class, 'index']);
 
 Route::post('/midtrans-callback', [OrderController::class, 'midtransCallback']);

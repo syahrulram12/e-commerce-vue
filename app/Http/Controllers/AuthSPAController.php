@@ -22,7 +22,7 @@ class AuthSPAController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 401);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $credentials = $request->only('email', 'password');
@@ -33,7 +33,7 @@ class AuthSPAController extends Controller
             $user->customer = Customer::where('user_id', $user->id)->first();
             return response()->json(['user' => $user], 200);
         }
-        return response()->json(['email' => 'Credential not found'], 401);
+        return response()->json(['email' => 'Credential not found'], 422);
     }
 
     public function register(Request $request)

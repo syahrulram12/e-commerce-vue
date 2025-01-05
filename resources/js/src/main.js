@@ -21,11 +21,13 @@ require("@core/assets/fonts/feather/iconfont.css"); // For form-wizard
 require("@resources//sass/style.scss");
 require("bootstrap/dist/css/bootstrap.css");
 require("bootstrap-vue/dist/bootstrap-vue.css");
+require("sweetalert2/dist/sweetalert2.min.css");
 
 // Plugins
-import { BootstrapVue, ModalPlugin } from "bootstrap-vue";
+import { BootstrapVue, ModalPlugin, ToastPlugin } from "bootstrap-vue";
 Vue.use(VueSweetalert2);
 Vue.use(ModalPlugin);
+Vue.use(ToastPlugin);
 Vue.use(BootstrapVue);
 
 new Vue({

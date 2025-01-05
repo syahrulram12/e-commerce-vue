@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         $categories = ['T-Shirt', 'Jaket', 'Kemeja', 'Celana Pendek', 'Celana Panjang', 'Celana Cargo'];
         DB::transaction(function () use ($categories) {
             try {
-                // foreach ($categories as $key => $category) {
-                //     factory(Category::class)->create(['name' => $category]);
-                // }
+                foreach ($categories as $key => $category) {
+                    factory(Category::class)->create(['name' => $category]);
+                }
                 factory(Product::class, 30)->create();
             } catch (\Throwable $th) {
                 Log::error($th->getMessage());

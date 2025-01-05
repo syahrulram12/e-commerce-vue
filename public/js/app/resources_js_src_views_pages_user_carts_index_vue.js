@@ -12,17 +12,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _services_api_cart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api/cart */ "./resources/js/src/services/api/cart.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/container.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/* harmony import */ var _services_api_order__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/services/api/order */ "./resources/js/src/services/api/order.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/container.js");
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    BContainer: bootstrap_vue__WEBPACK_IMPORTED_MODULE_1__.BContainer
+    BContainer: bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__.BContainer
   },
   data: function data() {
     var _this = this;
@@ -69,11 +66,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }, 0);
     }
   },
-  methods: _defineProperty({
-    checkout: function checkout() {
-      // Implement checkout logic here
-      alert("Proceeding to checkout");
-    },
+  methods: {
     removeFromCart: function removeFromCart(id) {
       var _this2 = this;
       (0,_services_api_cart__WEBPACK_IMPORTED_MODULE_0__.deleteItem)(id).then(function (response) {
@@ -95,39 +88,45 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           _this3.loading = false;
         }
       })["catch"](function (error) {
-        console.error(error);
+        _this3.$toast("Failed to fetch data", {
+          title: "Error",
+          variant: "danger",
+          solid: true
+        });
         _this3.loading = false;
       });
-    }
-  }, "checkout", function checkout() {
-    axios.post("/api/order", {
-      cart_id: this.cart.id,
-      order_number: "ORD_31/12/24_01",
-      items: this.cartItems.map(function (item) {
-        return {
-          product_id: item.product_id,
-          quantity: item.quantity
-        };
-      })
-    }).then(function (res) {
-      window.snap.pay(res.data.token, {
-        onSuccess: function onSuccess(result) {
-          this.$router.refresh();
-        },
-        onPending: function onPending(result) {
-          console.log("pending", result);
-        },
-        onError: function onError(result) {
-          console.log("error", result);
-        },
-        onClose: function onClose() {
-          console.log("customer closed the popup without finishing the payment");
-        }
+    },
+    checkout: function checkout() {
+      var formData = {
+        cart_id: this.cart.id,
+        order_number: "ORD_31/12/24_01",
+        items: this.cartItems.map(function (item) {
+          return {
+            product_id: item.product_id,
+            quantity: item.quantity
+          };
+        })
+      };
+      (0,_services_api_order__WEBPACK_IMPORTED_MODULE_1__.postData)(formData).then(function (res) {
+        window.snap.pay(res.data.token, {
+          onSuccess: function onSuccess(result) {
+            this.$router.refresh();
+          },
+          onPending: function onPending(result) {
+            console.log("pending", result);
+          },
+          onError: function onError(result) {
+            console.log("error", result);
+          },
+          onClose: function onClose() {
+            console.log("customer closed the popup without finishing the payment");
+          }
+        });
+      })["catch"](function (err) {
+        console.log(err);
       });
-    })["catch"](function (err) {
-      console.log(err);
-    });
-  })
+    }
+  }
 });
 
 /***/ }),
@@ -255,7 +254,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getList: () => (/* binding */ getList),
 /* harmony export */   postData: () => (/* binding */ postData)
 /* harmony export */ });
-/* harmony import */ var _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/libs/network-service */ "./resources/js/src/@core/libs/network-service.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 
 var resourcePath = "/api/cart";
 var getList = function getList() {
@@ -263,30 +262,69 @@ var getList = function getList() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
     args[_key] = arguments[_key];
   }
-  return (_httpService$getHttp = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
+  return (_httpService$getHttp = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
 };
 var postData = function postData() {
   var _httpService$getHttp2;
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
     args[_key2] = arguments[_key2];
   }
-  return (_httpService$getHttp2 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
+  return (_httpService$getHttp2 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
 };
 var getDetail = function getDetail(slug) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(slug));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(slug));
 };
 var deleteData = function deleteData(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
 };
 var deleteItem = function deleteItem(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/delete-item/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/delete-item/").concat(id));
 };
 var addToCart = function addToCart() {
   var _httpService$getHttp3;
   for (var _len3 = arguments.length, data = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
     data[_key3] = arguments[_key3];
   }
-  return (_httpService$getHttp3 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp3, ["".concat(resourcePath, "/add-to-cart")].concat(data));
+  return (_httpService$getHttp3 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp3, ["".concat(resourcePath, "/add-to-cart")].concat(data));
+};
+
+/***/ }),
+
+/***/ "./resources/js/src/services/api/order.js":
+/*!************************************************!*\
+  !*** ./resources/js/src/services/api/order.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteData: () => (/* binding */ deleteData),
+/* harmony export */   getDetail: () => (/* binding */ getDetail),
+/* harmony export */   getList: () => (/* binding */ getList),
+/* harmony export */   postData: () => (/* binding */ postData)
+/* harmony export */ });
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
+
+var resourcePath = "/api/order";
+var getList = function getList() {
+  var _httpService$getHttp;
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  return (_httpService$getHttp = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
+};
+var postData = function postData() {
+  var _httpService$getHttp2;
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+  return (_httpService$getHttp2 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
+};
+var getDetail = function getDetail(slug) {
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(slug));
+};
+var deleteData = function deleteData(id) {
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
 };
 
 /***/ }),

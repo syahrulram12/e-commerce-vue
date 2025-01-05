@@ -27,7 +27,8 @@
           <b-col
             v-for="product in products"
             :key="product.id"
-            cols="4"
+            cols="6"
+            md="4"
             lg="3"
             class="mb-4"
           >

@@ -164,9 +164,9 @@ var render = function render() {
       key: product.id,
       staticClass: "py-2",
       attrs: {
-        cols: "4",
+        cols: "6",
         md: "4",
-        sm: "6"
+        lg: "4"
       }
     }, [_c("b-card", {
       staticClass: "shadow-sm product-card mouse-pointer",
@@ -241,7 +241,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getList: () => (/* binding */ getList),
 /* harmony export */   postData: () => (/* binding */ postData)
 /* harmony export */ });
-/* harmony import */ var _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @core/libs/network-service */ "./resources/js/src/@core/libs/network-service.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 
 var resourcePath = "/api/product";
 var getList = function getList() {
@@ -249,20 +249,20 @@ var getList = function getList() {
   for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
     args[_key] = arguments[_key];
   }
-  return (_httpService$getHttp = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
+  return (_httpService$getHttp = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).get.apply(_httpService$getHttp, [resourcePath].concat(args));
 };
 var postData = function postData() {
   var _httpService$getHttp2;
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
     args[_key2] = arguments[_key2];
   }
-  return (_httpService$getHttp2 = _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
+  return (_httpService$getHttp2 = _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [resourcePath].concat(args));
 };
 var getDetail = function getDetail(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp().get("".concat(resourcePath, "/").concat(id));
 };
 var deleteData = function deleteData(id) {
-  return _core_libs_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
+  return _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()["delete"]("".concat(resourcePath, "/").concat(id));
 };
 
 /***/ }),

@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\Customer;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -22,28 +25,33 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 401);
+            throw ValidationException::withMessages(['email' => 'Invalid email or password']);
         }
-
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            $token = $user->createToken()->accessToken;
-            return response()->json(['token' => $token], 200);
-        } else {
-            return response()->json(['errors' => 'Unauthorized'], 401);
+        try {
+            if (Auth::attempt($request->only('email', 'password'))) {
+                $user = Auth::user();
+                $user->token = $user->createToken('cust-token')->plainTextToken;
+                return response()->json(new UserResource($user));
+            } else {
+                throw new Exception("Credentials not found", 1);
+            }
+        } catch (\Throwable $th) {
+            throw ValidationException::withMessages(['email' => 'Invalid email or password']);
         }
     }
 
     public function register(Request $request)
     {
-        $emailRules = 'unique:users,email';
+
+        $emailRules = 'unique:users,email|unique:customers,email';
         $passwordRules = 'required|string|min:8';
 
         if (!empty($request->get('id'))) {
             $emailRules = ['email', Rule::unique('users')->ignore($request->get('id'))];
             $passwordRules = 'nullable|string|min:8';
         }
-        $validatedData = $request->validate([
+
+        $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'birth_date' => 'required|date',
             'phone_number' => 'required|string|max:15',
@@ -53,38 +61,46 @@ class AuthController extends Controller
             'password' => $passwordRules,
         ]);
 
-        $transaction = DB::transaction(function () use ($validatedData) {
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422);
+        }
+
+        $transaction = DB::transaction(function () use ($request) {
             $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
                 'is_admin' => false
             ]);
 
 
-            if ($user->is_admin === false) {
-                Customer::updateOrCreate(['user_id' => $user->id], [
+            $user->customer()->create(
+                [
                     'user_id' => $user->id,
-                    'name' => $validatedData['name'],
-                    'phone_number' => $validatedData['phone_number'],
-                    'address' => $validatedData['address'],
-                    'gender' => $validatedData['gender'],
-                    'birth_date' => $validatedData['birth_date'],
-                    'email' => $validatedData['email'],
-                    'password' => $validatedData['password'],
-                ]);
-            }
-            // Auth::login($user);
+                    'name' => $request->name,
+                    'phone_number' => $request->phone_number,
+                    'address' => $request->address,
+                    'gender' => $request->gender,
+                    'birth_date' => $request->birth_date,
+                    'email' => $request->email,
+                    'password' => $user->password,
+                ]
+            );
 
             return compact('user');
         });
 
-        return response()->json(['user' => $transaction['user']]);
+        return response()->json(new UserResource($transaction['user']), 201);
     }
 
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
         return response()->json(['message' => 'Successfully logged out'], 200);
+    }
+
+    public function getAuthUser(Request $request)
+    {
+        return response()->json(new UserResource($request->user()));
     }
 }

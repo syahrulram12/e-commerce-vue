@@ -34,7 +34,7 @@ import {
 // General
 // ////////////////////////////////////////////////////////
 
-localize({ en: { messages: id.messages } });
+localize("en");
 
 export const required = extend("required", rule_required);
 

@@ -3,22 +3,14 @@ export default [
         path: "/",
         redirect: { name: "home" },
         meta: {
-            layout: "default",
+            layout: "user",
         },
-    },
-    {
-        path: "/login",
-        name: "login",
-        meta: {
-            layout: "default",
-        },
-        component: () => import("@/views/pages/auth/login.vue"),
     },
     {
         path: "/faq",
         name: "faq",
         meta: {
-            layout: "default",
+            layout: "user",
         },
         component: () => import("@/views/pages/user/faq.vue"),
     },
@@ -26,23 +18,18 @@ export default [
         path: "/contact",
         name: "contact",
         meta: {
-            layout: "default",
+            public: true,
+            layout: "user",
         },
         component: () => import("@/views/pages/user/contact.vue"),
     },
-    {
-        path: "/register",
-        name: "register",
-        meta: {
-            layout: "default",
-        },
-        component: () => import("@/views/pages/auth/register.vue"),
-    },
+
     {
         name: "home",
         path: "/home",
         meta: {
-            layout: "default",
+            public: true,
+            layout: "user",
         },
         component: () => import("@/views/pages/user/index.vue"),
     },
@@ -50,7 +37,7 @@ export default [
     //     name: "order",
     //     path: "/order",
     //     meta: {
-    //         layout: "default",
+    //         layout: "user",
     //     },
     //     component: () => import("@/views/pages/user/order/index.vue"),
     // },
@@ -58,7 +45,8 @@ export default [
         name: "cart",
         path: "/cart",
         meta: {
-            layout: "default",
+            public: false,
+            layout: "user",
         },
         component: () => import("@/views/pages/user/carts/index.vue"),
     },
@@ -66,7 +54,7 @@ export default [
         name: "product",
         path: "/product",
         meta: {
-            layout: "default",
+            layout: "user",
         },
         component: () => import("@/views/pages/user/product/index.vue"),
     },
@@ -74,7 +62,7 @@ export default [
         path: "/product/:slug",
         name: "product-detail",
         meta: {
-            layout: "default",
+            layout: "user",
             breadcrumb: [
                 {
                     text: "Product",
@@ -92,7 +80,7 @@ export default [
         name: "about-us",
         path: "/about-us",
         meta: {
-            layout: "default",
+            layout: "user",
         },
         component: () => import("@/views/pages/user/aboutUs.vue"),
     },
@@ -100,7 +88,7 @@ export default [
     //     name: "payment-success",
     //     path: "/order/payment-success",
     //     meta: {
-    //         layout: "default",
+    //         layout: "user",
     //     },
     //     component: () => import("@/views/pages/user/order/paymentSuccess.vue"),
     // },

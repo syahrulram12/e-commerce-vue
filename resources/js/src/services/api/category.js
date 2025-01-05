@@ -1,4 +1,4 @@
-import httpService from "@core/libs/network-service";
+import httpService from "@/services/api-service";
 
 const resourcePath = "/api/category";
 

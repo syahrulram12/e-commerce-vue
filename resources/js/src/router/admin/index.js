@@ -6,9 +6,9 @@ import user from "./pages/user";
 export default [
     {
         path: "/admin/",
-        redirect: { name: "admin-dashboard" },
+        redirect: { name: "admin-login" },
         meta: {
-            public: false,
+            public: true,
         },
     },
     {

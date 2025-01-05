@@ -1,4 +1,4 @@
-import httpService from "@core/libs/network-service";
+import httpService from "@/services/network-service";
 const loginPath = "/login";
 const registerPath = "/register";
 

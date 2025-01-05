@@ -6,8 +6,24 @@
     height: 100%;
 }
 
-h-fit{
+.min-h-full {
+    min-height: 100%;
+}
+
+h-fit {
     height: fit-content;
+}
+
+.category-dropdown {
+    .dropdown-menu.show {
+        width: 30rem;
+        display: grid;
+        grid-auto-columns: auto auto;
+        overflow: hidden;
+        grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+        grid-gap: 1rem;
+        padding: 1rem;
+    }
 }
 
 .product-card {

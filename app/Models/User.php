@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,7 +20,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin',
     ];
 
     /**
@@ -29,6 +29,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'is_admin',
         'remember_token',
     ];
 
@@ -43,6 +44,16 @@ class User extends Authenticatable
 
     protected $appends = ['customer_name'];
 
+
+    /**
+     * Get the customers associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function customer(): HasOne
+    {
+        return $this->hasOne(Customer::class, 'user_id');
+    }
 
     public function getCustomerNameAttribute()
     {

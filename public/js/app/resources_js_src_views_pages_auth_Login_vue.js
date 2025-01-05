@@ -11,25 +11,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var _validations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @validations */ "./resources/js/src/@core/utils/validations/index.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-input/form-input.js");
+/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
+/* harmony import */ var _services_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/network-service */ "./resources/js/src/services/network-service.js");
+/* harmony import */ var _validations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @validations */ "./resources/js/src/@core/utils/validations/index.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-input/form-input.js");
+
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_1__.ValidationProvider,
-    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_1__.ValidationObserver,
+    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_2__.ValidationProvider,
+    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_2__.ValidationObserver,
     // Bootstrap components
-    BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__.BFormInput
+    BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__.BFormInput
   },
   data: function data() {
     return {
       userEmail: "",
       userPassword: "",
-      email: _validations__WEBPACK_IMPORTED_MODULE_0__.email,
-      required: _validations__WEBPACK_IMPORTED_MODULE_0__.required
+      email: _validations__WEBPACK_IMPORTED_MODULE_1__.email,
+      required: _validations__WEBPACK_IMPORTED_MODULE_1__.required
     };
   },
   methods: {
@@ -37,20 +39,28 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
       this.$refs.loginForm.validate().then(function (success) {
         if (success) {
+          _this.buttonLoading = true;
           var vForm = new FormData();
           vForm.append("email", _this.userEmail);
           vForm.append("password", _this.userPassword);
-          // Handle login logic here
-          axios.post("/login", vForm).then(function (response) {
+          _services_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].login(vForm).then(function (response) {
+            _this.buttonLoading = false;
             // Store Auth User
             localStorage.setItem("authUser", JSON.stringify(response.data.user));
+            localStorage.setItem("authToken", response.data.token);
             // Redirect to dashboard
+            _this.$bvToast.toast("Login Successful", {
+              title: "Success",
+              variant: "success",
+              solid: true,
+              time: 3000
+            });
             _this.$router.push({
-              name: "admin-dashboard"
+              name: "home"
             });
           })["catch"](function (error) {
+            console.log(error.response.data.errors);
             if (error.response.data.errors) {
-              console.log(error.response.data.errors);
               _this.$refs.loginForm.setErrors(error.response.data.errors);
             } else {
               _this.$refs.loginForm.setErrors(error.response.data);
@@ -231,8 +241,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   url: () => (/* binding */ url)
 /* harmony export */ });
 /* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vee-validate/dist/rules */ "./node_modules/vee-validate/dist/rules.js");
-/* harmony import */ var vee_validate_dist_locale_id_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate/dist/locale/id.json */ "./node_modules/vee-validate/dist/locale/id.json");
+/* harmony import */ var vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate/dist/rules */ "./node_modules/vee-validate/dist/rules.js");
 /* harmony import */ var _validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validators */ "./resources/js/src/@core/utils/validations/validators.js");
 
 
@@ -245,28 +254,24 @@ __webpack_require__.r(__webpack_exports__);
 // General
 // ////////////////////////////////////////////////////////
 
-(0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.localize)({
-  en: {
-    messages: vee_validate_dist_locale_id_json__WEBPACK_IMPORTED_MODULE_2__.messages
-  }
-});
-var required = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.required);
-var email = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("email", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.email);
-var min = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.min);
-var max = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.max);
-var min_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.min_value);
-var max_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.max_value);
-var confirmed = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("confirmed", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.confirmed);
-var required_if = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required_if", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.required_if);
-var regex = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("regex", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.regex);
-var between = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("between", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.between);
-var alpha = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha);
-var integer = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("integer", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.integer);
-var digits = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("digits", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.digits);
-var alphaDash = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-dash", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha_dash);
-var alphaNum = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-num", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.alpha_num);
-var length = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("length", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.length);
-var numeric = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("numeric", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_3__.numeric);
+(0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.localize)("en");
+var required = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.required);
+var email = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("email", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.email);
+var min = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.min);
+var max = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.max);
+var min_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("min_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.min_value);
+var max_value = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("max_value", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.max_value);
+var confirmed = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("confirmed", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.confirmed);
+var required_if = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("required_if", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.required_if);
+var regex = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("regex", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.regex);
+var between = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("between", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.between);
+var alpha = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha);
+var integer = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("integer", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.integer);
+var digits = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("digits", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.digits);
+var alphaDash = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-dash", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha_dash);
+var alphaNum = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("alpha-num", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.alpha_num);
+var length = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("length", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.length);
+var numeric = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("numeric", vee_validate_dist_rules__WEBPACK_IMPORTED_MODULE_2__.numeric);
 var positive = (0,vee_validate__WEBPACK_IMPORTED_MODULE_1__.extend)("positive", {
   validate: _validators__WEBPACK_IMPORTED_MODULE_0__.validatorPositive,
   message: "Masukkan Angka Positif!"
@@ -371,7 +376,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.login-container[data-v-ae595c12] {\r\n  width: 50%;\r\n  max-width: 700px;\r\n  margin: 0 auto;\r\n  border: 1px solid #ccc;\r\n  border-radius: 5px;\n}\n.form-group[data-v-ae595c12] {\r\n  margin-bottom: 15px;\n}\nlabel[data-v-ae595c12] {\r\n  display: block;\r\n  margin-bottom: 5px;\n}\ninput[data-v-ae595c12] {\r\n  width: 100%;\r\n  padding: 8px;\r\n  box-sizing: border-box;\n}\nbutton[data-v-ae595c12] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  background-color: #007bff;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 5px;\r\n  cursor: pointer;\n}\nbutton[data-v-ae595c12]:hover {\r\n  background-color: #0056b3;\n}\n@media (max-width: 768px) {\n.login-container[data-v-ae595c12] {\r\n    width: 90%;\n}\nbutton[data-v-ae595c12] {\r\n    padding: 8px;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.login-container[data-v-ae595c12] {\r\n  width: 50%;\r\n  max-width: 500px;\r\n  margin: 0 auto;\r\n  border: 1px solid #ccc;\r\n  border-radius: 5px;\n}\n.form-group[data-v-ae595c12] {\r\n  margin-bottom: 15px;\n}\nlabel[data-v-ae595c12] {\r\n  display: block;\r\n  margin-bottom: 5px;\n}\ninput[data-v-ae595c12] {\r\n  width: 100%;\r\n  padding: 8px;\r\n  box-sizing: border-box;\n}\nbutton[data-v-ae595c12] {\r\n  width: 100%;\r\n  padding: 10px;\r\n  background-color: #007bff;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 5px;\r\n  cursor: pointer;\n}\nbutton[data-v-ae595c12]:hover {\r\n  background-color: #0056b3;\n}\n@media (max-width: 768px) {\n.login-container[data-v-ae595c12] {\r\n    width: 90%;\n}\nbutton[data-v-ae595c12] {\r\n    padding: 8px;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3322,16 +3327,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_login_vue_vue_type_style_index_0_id_ae595c12_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/style-loader/dist/cjs.js!../../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./login.vue?vue&type=style&index=0&id=ae595c12&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/src/views/pages/auth/login.vue?vue&type=style&index=0&id=ae595c12&scoped=true&lang=css");
 
-
-/***/ }),
-
-/***/ "./node_modules/vee-validate/dist/locale/id.json":
-/*!*******************************************************!*\
-  !*** ./node_modules/vee-validate/dist/locale/id.json ***!
-  \*******************************************************/
-/***/ ((module) => {
-
-module.exports = /*#__PURE__*/JSON.parse('{"code":"id","messages":{"alpha":"{_field_} hanya boleh mengandung karakter alfabet","alpha_num":"{_field_} hanya boleh mengandung karakter alfanumerik","alpha_dash":"{_field_} boleh mengandung karakter alfanumerik, tanda hubung, dan garis bawah","alpha_spaces":"{_field_} hanya boleh berisi karakter alfabet serta spasi","between":"{_field_} harus di antara {min} dan {max}","confirmed":"{_field_} tidak cocok dengan {target}","digits":"{_field_} harus berupa {length} digit angka","dimensions":"{_field_} harus berdimensi lebar {width} pixel dan tinggi {height} pixel","email":"{_field_} harus berupa alamat surel yang benar","excluded":"{_field_} harus berupa nilai yang sah","ext":"{_field_} harus berupa berkas yang benar","image":"{_field_} harus berupa gambar","integer":"{_field_} harus berupa bilangan bulat","length":"Panjang {_field_} harus tepat {length}","max_value":"Nilai {_field_} tidak boleh lebih dari {max}","max":"{_field_} tidak boleh lebih dari {length} karakter","mimes":"Tipe berkas {_field_} harus benar","min_value":"Nilai {_field_} tidak boleh kurang dari {min}","min":"{_field_} minimal mengandung {length} karakter","numeric":"{_field_} harus berupa angka","oneOf":"{_field_} harus berupa nilai yang sah","regex":"Format {_field_} salah","required":"{_field_} harus diisi","required_if":"{_field_} harus diisi","size":"{_field_} harus lebih kecil dari {size}KB","double":"{_field_} harus berupa desimal yang valid"}}');
 
 /***/ })
 

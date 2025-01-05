@@ -1,13 +1,25 @@
+@import "~bootstrap";
+@import "~bootstrap-vue";
+
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
-@import "./core/components.scss";
 
+
+@import "./core/components.scss";
 // Variables
 @import "variables";
 
 // Bootstrap
-@import "~bootstrap";
-@import "~bootstrap-vue";
 
 //Custom
 @import "./core/custom-rtl.scss";
+
+@each $name, $size in $border-width-customs {
+    @each $var in "", "top-", "right-", "bottom-", "left-" {
+        .border-#{$var}#{$name} {
+            border-#{$var}width: $size !important;
+            border-#{$var}style: solid;
+            border-#{$var}color: $border-color;
+        }
+    }
+}

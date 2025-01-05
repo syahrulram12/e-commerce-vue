@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!loading && Object.keys(cartItems).length > 0" class="position-relative h-full">
+  <div
+    v-if="!loading && Object.keys(cartItems).length > 0"
+    class="position-relative h-full"
+  >
     <section class="product-detail-section position-relative z-1">
       <div class="jumbotron d-flex rounded-0 h-full" style="flex-direction: column">
         <div class="overlay"></div>
@@ -71,8 +74,8 @@
 </template>
 
 <script>
-import { getList } from "@/services/api/cart";
-import { deleteItem } from "@/services/api/cart";
+import { getList, deleteItem } from "@/services/api/cart";
+import { postData as checkoutOrder } from "@/services/api/order";
 import { BContainer } from "bootstrap-vue";
 export default {
   components: {
@@ -111,10 +114,6 @@ export default {
     },
   },
   methods: {
-    checkout() {
-      // Implement checkout logic here
-      alert("Proceeding to checkout");
-    },
     removeFromCart(id) {
       deleteItem(id)
         .then((response) => {
@@ -134,20 +133,24 @@ export default {
           }
         })
         .catch((error) => {
-          console.error(error);
+          this.$toast("Failed to fetch data", {
+            title: "Error",
+            variant: "danger",
+            solid: true,
+          });
           this.loading = false;
         });
     },
     checkout() {
-      axios
-        .post("/api/order", {
-          cart_id: this.cart.id,
-          order_number: "ORD_31/12/24_01",
-          items: this.cartItems.map((item) => ({
-            product_id: item.product_id,
-            quantity: item.quantity,
-          })),
-        })
+      let formData = {
+        cart_id: this.cart.id,
+        order_number: "ORD_31/12/24_01",
+        items: this.cartItems.map((item) => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+        })),
+      };
+      checkoutOrder(formData)
         .then((res) => {
           window.snap.pay(res.data.token, {
             onSuccess: function (result) {
