@@ -43,9 +43,9 @@
           <b-nav-item-dropdown v-if="user" right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <span>{{ user.customer_name }}</span>
+              <span>{{ user.name }}</span>
             </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
+            <b-dropdown-item :to="{ name: 'order' }">Order History</b-dropdown-item>
             <b-dropdown-item @click="logout">Sign Out</b-dropdown-item>
           </b-nav-item-dropdown>
           <template v-else>
@@ -53,9 +53,7 @@
               <b-link :to="{ name: 'login' }" class="text-dark"> Sign in </b-link>
             </b-nav-item>
             <b-nav-item>
-              <b-link>
-                <b-link :to="{ name: 'register' }" class="text-dark"> Register </b-link>
-              </b-link>
+              <b-link :to="{ name: 'register' }" class="text-dark"> Register </b-link>
             </b-nav-item>
           </template>
         </b-navbar-nav>
@@ -115,22 +113,23 @@
 </template>
 
 <script>
-import { getAuthUser } from "@/auth/utils";
+import { getAuthUser, authUser } from "@/auth/utils";
 import httpService from "@/services/network-service";
 import { getList } from "@/services/api/category";
 import {
-  BNavbarBrand,
   BNavbar,
+  BNavbarBrand,
+  BNavItemDropdown,
+  BDropdownItem,
   BNavbarToggle,
   BCollapse,
   BNavbarNav,
   BNavItem,
-  BNavItemDropdown,
-  BNavForm,
-  BFormInput,
-  BButton,
-  BDropdownItem,
+  BRow,
+  BCol,
+  BLink,
 } from "bootstrap-vue";
+import { authAdmin, removeUserData } from "../../auth/utils";
 
 export default {
   components: {
@@ -142,28 +141,16 @@ export default {
     BCollapse,
     BNavbarNav,
     BNavItem,
-    BNavForm,
-    BFormInput,
-    BButton,
-  },
-  created() {
-    this.getCategories();
+    BRow,
+    BCol,
+    BLink,
   },
   methods: {
-    async getCategories(slug = "", perPage = 10, page = 1) {
-      try {
-        const response = await getList();
-        this.categories = response.data;
-        console.log(this.categories);
-      } catch (error) {
-        console.log(error);
-      }
-    },
     logout() {
       httpService
         .logout()
         .then((response) => {
-          localStorage.removeItem("authUser");
+          removeUserData(authAdmin);
           this.$router.replace({ name: "login" });
         })
         .catch((error) => {
@@ -172,13 +159,19 @@ export default {
     },
   },
   setup() {
-    const user = getAuthUser();
+    const user = getAuthUser(authUser);
     return {
       user,
     };
   },
+  created() {},
   data() {
     const categories = [];
+    getList()
+      .then((res) => {
+        this.categories = res.data;
+      })
+      .catch((err) => {});
     return {
       authUser: null,
       categories,

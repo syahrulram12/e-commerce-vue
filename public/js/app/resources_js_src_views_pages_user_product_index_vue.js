@@ -77,13 +77,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this.totalProducts = response.data.total;
               _this.lastPage = response.data.last_page;
               _this.loading = false;
-              _context.next = 20;
+              _context.next = 19;
               break;
             case 17:
               _context.prev = 17;
               _context.t0 = _context["catch"](6);
-              console.log(_context.t0);
-            case 20:
+            case 19:
             case "end":
               return _context.stop();
           }

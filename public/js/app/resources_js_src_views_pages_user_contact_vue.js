@@ -28,8 +28,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submitForm: function submitForm() {
-      // Handle form submission
-      console.log("Form submitted:", this.form);
       // Reset form
       this.form.name = "";
       this.form.email = "";

@@ -9,7 +9,9 @@ export const storeAuthUser = (userType, user) => {
 // Get auth user from localStorage
 export const getAuthUser = (userType) => {
     const user = localStorage.getItem(userType);
-    return user ? JSON.parse(user) : null;
+    return user !== null || typeof user !== "undefined"
+        ? JSON.parse(user)
+        : null;
 };
 
 // Remove auth user from localStorage if null

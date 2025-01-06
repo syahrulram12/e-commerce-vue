@@ -4,7 +4,6 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 
-
 @import "./core/components.scss";
 // Variables
 @import "variables";
@@ -23,3 +22,11 @@
         }
     }
 }
+
+@each $name, $value in $object-fit-customs {
+    .object-#{$name} {
+        object-fit: $value !important;
+    }
+}
+
+

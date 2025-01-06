@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class OrderSPAController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response()->json(new OrderResource($order));
     }
 
     /**

@@ -18,11 +18,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flatpickr_dist_flatpickr_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! flatpickr/dist/flatpickr.css */ "./node_modules/flatpickr/dist/flatpickr.css");
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _services_spa_auth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/services/spa/auth */ "./resources/js/src/services/spa/auth.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-input/form-input.js");
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/col.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/row.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-textarea/form-textarea.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/button/button.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/row.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-textarea/form-textarea.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/spinner/spinner.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form/form-invalid-feedback.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -41,8 +44,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     // Bootstrap components
     BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__.BFormInput,
     BCol: bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__.BCol,
-    BRow: bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__.BRow,
-    BFormTextarea: bootstrap_vue__WEBPACK_IMPORTED_MODULE_9__.BFormTextarea,
+    BButton: bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__.BButton,
+    BRow: bootstrap_vue__WEBPACK_IMPORTED_MODULE_9__.BRow,
+    BFormTextarea: bootstrap_vue__WEBPACK_IMPORTED_MODULE_10__.BFormTextarea,
+    BSpinner: bootstrap_vue__WEBPACK_IMPORTED_MODULE_11__.BSpinner,
+    BFormInvalidFeedback: bootstrap_vue__WEBPACK_IMPORTED_MODULE_12__.BFormInvalidFeedback,
     // Other
     flatPickr: (vue_flatpickr_component__WEBPACK_IMPORTED_MODULE_1___default()),
     vSelect: (vue_select__WEBPACK_IMPORTED_MODULE_3___default())
@@ -68,6 +74,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         address: ""
       }, "email", ""),
       email: _validations__WEBPACK_IMPORTED_MODULE_0__.email,
+      isButtonLoading: false,
       required: _validations__WEBPACK_IMPORTED_MODULE_0__.required,
       configOptions: {
         altInput: true,
@@ -79,29 +86,37 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   methods: {
     handleRegister: function handleRegister() {
       var _this = this;
+      this.isButtonLoading = true;
       this.$refs.loginForm.validate().then(function (success) {
-        if (success) {
-          var vForm = new FormData();
-          for (var key in _this.formData) {
-            vForm.append(key, _this.formData[key]);
-          }
-          // Handle login logic here
-          (0,_services_spa_auth__WEBPACK_IMPORTED_MODULE_4__.register)(vForm).then(function (response) {
-            _this.$bvToast.toast("".concat(_this.formData.name, " updated successfully"), {
-              title: "Success",
-              variant: "primary",
-              toaster: "b-toaster-top-center",
-              solid: true
-            });
-          })["catch"](function (error) {
-            if (error.response.data.errors) {
-              _this.$refs.loginForm.setErrors(error.response.data.errors);
-            } else {
-              _this.$refs.loginForm.setErrors(error.response.data);
-            }
-            _this.$refs.email.focus();
-          });
+        if (!success) _this.isButtonLoading = false;
+        _this.isButtonLoading = true;
+        var vForm = new FormData();
+        for (var key in _this.formData) {
+          vForm.append(key, _this.formData[key]);
         }
+        // Handle login logic here
+        _services_api_service__WEBPACK_IMPORTED_MODULE_4__["default"].register(vForm).then(function (response) {
+          _this.$bvToast.toast("".concat(_this.formData.name, " register successfully"), {
+            title: "Success",
+            variant: "primary",
+            toaster: "b-toaster-top-right",
+            solid: true
+          });
+          _this.isButtonLoading = false;
+          setTimeout(function () {
+            _this.$router.push({
+              name: "login"
+            });
+          }, 2500);
+        })["catch"](function (error) {
+          if (error.response.data.errors) {
+            _this.$refs.loginForm.setErrors(error.response.data.errors);
+          } else {
+            _this.$refs.loginForm.setErrors(error.response.data);
+          }
+          _this.$refs.email.focus();
+          _this.isButtonLoading = false;
+        });
       });
     }
   }
@@ -434,13 +449,30 @@ var render = function render() {
           }], null, true)
         })], 1)], 1), _vm._v(" "), _c("b-button", {
           staticClass: "mt-2",
+          attrs: {
+            disabled: _vm.isButtonLoading
+          },
           on: {
             click: _vm.handleRegister
           }
-        }, [_vm._v("Register")])], 1)];
+        }, [_vm.isButtonLoading ? _c("b-spinner", {
+          attrs: {
+            small: ""
+          }
+        }) : _vm._e(), _vm._v("\n          Register\n        ")], 1)], 1)];
       }
     }])
-  })], 1)]);
+  }), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+    staticClass: "text-center"
+  }, [_vm._v("\n      Already have an account?\n      "), _c("b-link", {
+    on: {
+      click: function click($event) {
+        return _vm.$router.push({
+          name: "login"
+        });
+      }
+    }
+  }, [_vm._v("Sign in now")])], 1)], 1)]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -598,39 +630,6 @@ var validatorUrlValidator = function validatorUrlValidator(val) {
   var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
   /* eslint-enable no-useless-escape */
   return re.test(val);
-};
-
-/***/ }),
-
-/***/ "./resources/js/src/services/spa/auth.js":
-/*!***********************************************!*\
-  !*** ./resources/js/src/services/spa/auth.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   login: () => (/* binding */ login),
-/* harmony export */   register: () => (/* binding */ register)
-/* harmony export */ });
-/* harmony import */ var _services_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/network-service */ "./resources/js/src/services/network-service.js");
-
-var loginPath = "/login";
-var registerPath = "/register";
-var login = function login() {
-  var _httpService$getHttp;
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
-  return (_httpService$getHttp = _services_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp, [loginPath].concat(args));
-};
-var register = function register() {
-  var _httpService$getHttp2;
-  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
-  return (_httpService$getHttp2 = _services_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].getHttp()).post.apply(_httpService$getHttp2, [registerPath].concat(args));
 };
 
 /***/ }),

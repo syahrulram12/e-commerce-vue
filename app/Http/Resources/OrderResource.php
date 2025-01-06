@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Customer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -17,9 +18,10 @@ class OrderResource extends JsonResource
         return [
             'order_number' => $this->order_number,
             'customer_name' => $this->customer_name,
-            'customer_data' => $this->has($this->customer, $this->customer()->select('id', 'name', 'email', 'phone')->first()),
-            'status' => $this->status,
-            'total' => $this->total,
+            'customer_data' => $this->when($this->customer, new CustomerResource($this->customer)),
+            'sub_total' => $this->sub_total,
+            'total_tax' => $this->total_tax,
+            'total_price' => $this->total_price,
             'items' => $this->items,
             'snap_token' => $this->snap_token,
             'created_at' => $this->created_at,

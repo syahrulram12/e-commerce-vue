@@ -1,8 +1,10 @@
 <template>
   <div id="app" class="content-wrapper">
-    <component :is="defineLayout()">
-      <router-view />
-    </component>
+    <transition name="fade" mode="out-in">
+      <component :is="defineLayout()">
+        <router-view />
+      </component>
+    </transition>
   </div>
 </template>
 

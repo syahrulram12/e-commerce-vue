@@ -1,13 +1,13 @@
 import { axiosApiIns } from "../@core/libs/axios";
 const csrfCookiePath = "/sanctum/csrf-cookie";
-import { authUser } from "../auth/utils";
+import { authUser, getToken } from "@/auth/utils";
 export default new (class {
     axiosIns = null;
     user = null;
     constructor() {
         this.axiosIns = axiosApiIns;
         this.axiosIns.interceptors.request.use((config) => {
-            const token = localStorage.getItem(authUser);
+            const token = getToken();
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -44,8 +44,8 @@ export default new (class {
                 }
 
                 if (response && response.status === 401) {
-                    // localStorage.removeItem(authUser);
-                    // window.location.href = "/login";
+                    localStorage.removeItem(authUser);
+                    window.location.href = "/login";
                 }
 
                 return Promise.reject(error);
@@ -54,11 +54,15 @@ export default new (class {
     }
 
     login(...args) {
-        return this.axiosIns.post("/login", ...args);
+        return this.axiosIns.post("/api/login", ...args);
+    }
+
+    register(...args) {
+        return this.axiosIns.post("/api/register", ...args);
     }
 
     logout(...args) {
-        return this.axiosIns.get("/logout", ...args);
+        return this.axiosIns.get("/api/logout", ...args);
     }
 
     getHttp() {

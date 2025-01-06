@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Customer extends Model
+class Customer extends Model implements Authenticatable
+
 {
     use Notifiable, HasApiTokens;
     /**
@@ -15,6 +18,39 @@ class Customer extends Model
      *
      * @var array
      */
+
+    public function getAuthIdentifierName()
+    {
+        return 'id';
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
+
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
+
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
+
+    protected $guard = 'customer';
+
     protected $fillable = [
         'name',
         'user_id',
@@ -45,13 +81,20 @@ class Customer extends Model
         'email_verified_at' => 'datetime',
     ];
 
+
     /**
-     * Get the user that owns the Customer
+     * Get all of the order for the Customer
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user(): BelongsTo
+    public function order(): HasMany
     {
-        return $this->belongsTo(User::class, 'user_id', 'other_key');
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+
+    public function invoice(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'customer_id');
     }
 }

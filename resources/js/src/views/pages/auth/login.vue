@@ -44,7 +44,10 @@
               </b-form-invalid-feedback>
             </div>
           </ValidationProvider>
-          <b-button @click="handleLogin" class="mt-2">Login</b-button>
+          <b-button @click="handleLogin" class="mt-2">
+            <b-spinner v-if="isButtonLoading" small></b-spinner>
+            Login
+          </b-button>
         </form>
       </ValidationObserver>
       <hr />
@@ -58,9 +61,10 @@
 
 <script>
 import { ValidationProvider, ValidationObserver } from "vee-validate";
-import apiService from "@/services/network-service";
+import apiService from "@/services/api-service";
 import { required, email } from "@validations";
-import { BFormInput, BButton } from "bootstrap-vue";
+import { BFormInput, BButton, BSpinner, BFormInvalidFeedback } from "bootstrap-vue";
+import { authUser, storeAuthUser, storeToken } from "../../../auth/utils";
 
 export default {
   components: {
@@ -69,6 +73,9 @@ export default {
 
     // Bootstrap components
     BFormInput,
+    BButton,
+    BSpinner,
+    BFormInvalidFeedback,
   },
   data() {
     return {
@@ -76,42 +83,43 @@ export default {
       userPassword: "",
       email,
       required,
+      isButtonLoading: false,
     };
   },
   methods: {
     handleLogin() {
+      this.isButtonLoading = true;
       this.$refs.loginForm.validate().then((success) => {
-        if (success) {
-          this.buttonLoading = true;
-          const vForm = new FormData();
-          vForm.append("email", this.userEmail);
-          vForm.append("password", this.userPassword);
-          apiService
-            .login(vForm)
-            .then((response) => {
-              this.buttonLoading = false;
-              // Store Auth User
-              localStorage.setItem("authUser", JSON.stringify(response.data.user));
-              localStorage.setItem("authToken", response.data.token);
-              // Redirect to dashboard
-              this.$bvToast.toast("Login Successful", {
-                title: "Success",
-                variant: "success",
-                solid: true,
-                time: 3000,
-              });
-              this.$router.push({ name: "home" });
-            })
-            .catch((error) => {
-              console.log(error.response.data.errors);
-              if (error.response.data.errors) {
-                this.$refs.loginForm.setErrors(error.response.data.errors);
-              } else {
-                this.$refs.loginForm.setErrors(error.response.data);
-              }
-              this.$refs.email.focus();
+        if (!success) this.isButtonLoading = false;
+        const vForm = new FormData();
+        vForm.append("email", this.userEmail);
+        vForm.append("password", this.userPassword);
+        apiService
+          .login(vForm)
+          .then((response) => {
+            this.buttonLoading = false;
+            // Store Auth User
+            storeAuthUser(authUser, response.data.customer);
+            storeToken(response.data.token);
+            // Redirect to dashboard
+            this.$bvToast.toast("Login Successful", {
+              title: "Success",
+              variant: "success",
+              solid: true,
             });
-        }
+            setTimeout(() => {
+              this.$router.push({ name: "home" });
+            }, 1500);
+          })
+          .catch((error) => {
+            if (error.response.data.errors) {
+              this.$refs.loginForm.setErrors(error.response.data.errors);
+            } else {
+              this.$refs.loginForm.setErrors(error.response.data);
+            }
+            this.$refs.email.focus();
+            this.isButtonLoading = false;
+          });
       });
     },
   },

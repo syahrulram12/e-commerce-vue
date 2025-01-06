@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerResource;
 use App\Http\Resources\UserResource;
 use App\Models\Customer;
 use App\Models\User;
@@ -27,11 +28,12 @@ class AuthController extends Controller
         if ($validator->fails()) {
             throw ValidationException::withMessages(['email' => 'Invalid email or password']);
         }
+
         try {
-            if (Auth::attempt($request->only('email', 'password'))) {
-                $user = Auth::user();
+            if (Auth::guard('api')->attempt($request->only('email', 'password'))) {
+                $user = Auth::guard('api')->user();
                 $user->token = $user->createToken('cust-token')->plainTextToken;
-                return response()->json(new UserResource($user));
+                return response()->json(new CustomerResource($user));
             } else {
                 throw new Exception("Credentials not found", 1);
             }
@@ -43,13 +45,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        $emailRules = 'unique:users,email|unique:customers,email';
+        $emailRules = 'unique:customers,email';
         $passwordRules = 'required|string|min:8';
-
-        if (!empty($request->get('id'))) {
-            $emailRules = ['email', Rule::unique('users')->ignore($request->get('id'))];
-            $passwordRules = 'nullable|string|min:8';
-        }
 
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -66,31 +63,20 @@ class AuthController extends Controller
         }
 
         $transaction = DB::transaction(function () use ($request) {
-            $user = User::create([
+            $user = Customer::create([
                 'name' => $request->name,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'is_admin' => false
             ]);
-
-
-            $user->customer()->create(
-                [
-                    'user_id' => $user->id,
-                    'name' => $request->name,
-                    'phone_number' => $request->phone_number,
-                    'address' => $request->address,
-                    'gender' => $request->gender,
-                    'birth_date' => $request->birth_date,
-                    'email' => $request->email,
-                    'password' => $user->password,
-                ]
-            );
 
             return compact('user');
         });
 
-        return response()->json(new UserResource($transaction['user']), 201);
+        return response()->json(["message" => "success"]);
     }
 
     public function logout(Request $request)

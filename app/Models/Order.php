@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     protected $fillable = [
         'customer_id',
+        'customer_name',
         'order_number',
         'cart_id',
         'order_date',
@@ -38,6 +40,16 @@ class Order extends Model
         'last_updated_at'
     ];
 
+
+    /**
+     * Get the customer that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
     /**
      * Get all of the items for the Order
      *
@@ -73,5 +85,10 @@ class Order extends Model
         }
 
         return $query;
+    }
+
+    public function scopeFindOrder($query, $orderId)
+    {
+        return $query->where('id', $orderId)->orWhere('order_number', $orderId);
     }
 }

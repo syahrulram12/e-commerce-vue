@@ -40,7 +40,7 @@
     <div class="d-flex h-full">
       <nav
         id="sidebarMenu"
-        class="col-md-3 col-lg-2 d-md-block bg-light navbar-light sidebar collapse shadow-sm z-2"
+        class="col-md-3 col-lg-2 d-md-block bg-light navbar-light sidebar collapse shadow border-right z-2"
       >
         <div class="sidebar-sticky pt-3">
           <ul class="nav flex-column">
@@ -113,10 +113,14 @@
           </ul>
         </div>
       </nav>
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 z-1 py-4">
+      <main
+        role="main"
+        class="col-md-9 ml-sm-auto col-lg-10 px-md-4 z-1 py-4"
+        style="background-color: #f0f0f0"
+      >
         <transition name="fade" mode="out-in">
           <slot>
-            <div class="mx-auto"></div>
+            <div class="mx-auto bg-secondary"></div>
           </slot>
         </transition>
       </main>
@@ -125,7 +129,7 @@
 </template>
 <script>
 import httpService from "@/services/network-service";
-import { getAuthUser } from "@/auth/utils";
+import { getAuthUser, authAdmin } from "@/auth/utils";
 import {
   BButton,
   BCollapse,
@@ -159,13 +163,10 @@ export default {
     BLink,
   },
   setup() {
-    const user = getAuthUser();
+    const user = getAuthUser(authAdmin);
     return {
       user,
     };
-  },
-  created() {
-    console.log(this.user);
   },
   methods: {
     isActive(routeName) {
@@ -175,8 +176,8 @@ export default {
       httpService
         .logout()
         .then((response) => {
-          localStorage.removeItem("authUser");
-          this.$router.push({ name: "login" });
+          localStorage.removeItem("authAdmin");
+          this.$router.push({ name: "admin-login" });
         })
         .catch((error) => {
           console.log(error);

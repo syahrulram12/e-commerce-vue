@@ -38,3 +38,14 @@ $border-width-customs: (
     "7": $border-width-custom-7,
     "8": $border-width-custom-8,
 );
+
+$object-fit-cover: cover;
+$object-fit-contain: contain;
+$object-fit-fill: fill;
+$object-fit-none: none;
+$object-fit-customs: (
+    'cover' : $object-fit-cover,
+    'contain' : $object-fit-contain,
+    'fill' : $object-fit-fill,
+    'none' : $object-fit-none,
+)    

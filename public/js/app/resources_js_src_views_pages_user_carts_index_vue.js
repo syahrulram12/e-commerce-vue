@@ -14,12 +14,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_api_cart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api/cart */ "./resources/js/src/services/api/cart.js");
 /* harmony import */ var _services_api_order__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/services/api/order */ "./resources/js/src/services/api/order.js");
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/container.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/row.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/layout/col.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/spinner/spinner.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/table/table.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/breadcrumb/breadcrumb.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/breadcrumb/breadcrumb-item.js");
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    BContainer: bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__.BContainer
+    BContainer: bootstrap_vue__WEBPACK_IMPORTED_MODULE_2__.BContainer,
+    BRow: bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__.BRow,
+    BCol: bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__.BCol,
+    BSpinner: bootstrap_vue__WEBPACK_IMPORTED_MODULE_5__.BSpinner,
+    BTable: bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__.BTable,
+    BBreadcrumb: bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__.BBreadcrumb,
+    BBreadcrumbItem: bootstrap_vue__WEBPACK_IMPORTED_MODULE_8__.BBreadcrumbItem
   },
   data: function data() {
     var _this = this;
@@ -100,29 +112,9 @@ __webpack_require__.r(__webpack_exports__);
       var formData = {
         cart_id: this.cart.id,
         order_number: "ORD_31/12/24_01",
-        items: this.cartItems.map(function (item) {
-          return {
-            product_id: item.product_id,
-            quantity: item.quantity
-          };
-        })
+        items: this.cartItems
       };
-      (0,_services_api_order__WEBPACK_IMPORTED_MODULE_1__.postData)(formData).then(function (res) {
-        window.snap.pay(res.data.token, {
-          onSuccess: function onSuccess(result) {
-            this.$router.refresh();
-          },
-          onPending: function onPending(result) {
-            console.log("pending", result);
-          },
-          onError: function onError(result) {
-            console.log("error", result);
-          },
-          onClose: function onClose() {
-            console.log("customer closed the popup without finishing the payment");
-          }
-        });
-      })["catch"](function (err) {
+      (0,_services_api_order__WEBPACK_IMPORTED_MODULE_1__.postData)(formData).then(function (res) {})["catch"](function (err) {
         console.log(err);
       });
     }
@@ -143,10 +135,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
-  var _vm$cart$customer_nam, _vm$cart, _vm$cart$total_price$, _vm$cart$total_price, _vm$cart$total_tax$to, _vm$cart$total_tax, _vm$cart$total_price$2, _vm$cart$total_price2;
+  var _vm$cart$customer_nam, _vm$cart, _vm$cart2, _vm$cart3, _vm$cart4;
   var _vm = this,
     _c = _vm._self._c;
-  return !_vm.loading && Object.keys(_vm.cartItems).length > 0 ? _c("div", {
+  return !_vm.loading ? _c("div", {
     staticClass: "position-relative h-full"
   }, [_c("section", {
     staticClass: "product-detail-section position-relative z-1"
@@ -199,7 +191,13 @@ var render = function render() {
       key: "cell(price_per_unit)",
       fn: function fn(data) {
         var _data$item$price_per_, _data$item$price_per_2;
-        return [_vm._v("\n            " + _vm._s((_data$item$price_per_ = (_data$item$price_per_2 = data.item.price_per_unit) === null || _data$item$price_per_2 === void 0 ? void 0 : _data$item$price_per_2.toLocaleString()) !== null && _data$item$price_per_ !== void 0 ? _data$item$price_per_ : 0) + "\n          ")];
+        return [_vm._v("\n            Rp" + _vm._s((_data$item$price_per_ = (_data$item$price_per_2 = data.item.price_per_unit) === null || _data$item$price_per_2 === void 0 ? void 0 : _data$item$price_per_2.toLocaleString()) !== null && _data$item$price_per_ !== void 0 ? _data$item$price_per_ : 0) + "\n          ")];
+      }
+    }, {
+      key: "cell(total_price)",
+      fn: function fn(data) {
+        var _data$item$total_pric, _data$item$total_pric2;
+        return [_vm._v("\n            Rp" + _vm._s((_data$item$total_pric = (_data$item$total_pric2 = data.item.total_price) === null || _data$item$total_pric2 === void 0 ? void 0 : _data$item$total_pric2.toLocaleString()) !== null && _data$item$total_pric !== void 0 ? _data$item$total_pric : 0) + "\n          ")];
       }
     }, {
       key: "cell(actions)",
@@ -215,21 +213,53 @@ var render = function render() {
           }
         }, [_vm._v("Remove")])];
       }
-    }], null, false, 3723251421)
-  }), _vm._v(" "), _c("b-row", {
-    staticClass: "mt-3"
-  }, [_c("b-col", [_c("span", [_vm._v("Sub Total: Rp" + _vm._s((_vm$cart$total_price$ = (_vm$cart$total_price = _vm.cart.total_price) === null || _vm$cart$total_price === void 0 ? void 0 : _vm$cart$total_price.toLocaleString()) !== null && _vm$cart$total_price$ !== void 0 ? _vm$cart$total_price$ : 0))]), _c("br"), _vm._v(" "), _c("span", [_vm._v("Tax 12%: Rp" + _vm._s((_vm$cart$total_tax$to = (_vm$cart$total_tax = _vm.cart.total_tax) === null || _vm$cart$total_tax === void 0 ? void 0 : _vm$cart$total_tax.toLocaleString()) !== null && _vm$cart$total_tax$to !== void 0 ? _vm$cart$total_tax$to : 0))]), _c("br"), _vm._v(" "), _c("span", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Total: Rp" + _vm._s((_vm$cart$total_price$2 = (_vm$cart$total_price2 = _vm.cart.total_price) === null || _vm$cart$total_price2 === void 0 ? void 0 : _vm$cart$total_price2.toLocaleString()) !== null && _vm$cart$total_price$2 !== void 0 ? _vm$cart$total_price$2 : 0))])]), _vm._v(" "), _c("b-col", {
-    staticClass: "text-right"
+    }], null, false, 1317395548)
+  }), _vm._v(" "), Object.keys(_vm.cartItems).length > 0 ? _c("div", {
+    staticClass: "mt-3 d-flex"
+  }, [_c("div", {
+    staticClass: "ml-auto text-left",
+    staticStyle: {
+      width: "40%",
+      "max-width": "300px"
+    }
+  }, [_c("b-card", [_c("b-row", [_c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v("Sub Total")]), _vm._v(" "), _c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v(_vm._s((_vm$cart2 = _vm.cart) === null || _vm$cart2 === void 0 || (_vm$cart2 = _vm$cart2.total_price) === null || _vm$cart2 === void 0 ? void 0 : _vm$cart2.toLocaleString()))]), _vm._v(" "), _c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v("Total Tax 11%")]), _vm._v(" "), _c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v(_vm._s((_vm$cart3 = _vm.cart) === null || _vm$cart3 === void 0 || (_vm$cart3 = _vm$cart3.total_price) === null || _vm$cart3 === void 0 ? void 0 : _vm$cart3.toLocaleString()))]), _vm._v(" "), _c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v("Total Price")]), _vm._v(" "), _c("b-col", {
+    attrs: {
+      cols: "6"
+    }
+  }, [_vm._v(_vm._s((_vm$cart4 = _vm.cart) === null || _vm$cart4 === void 0 || (_vm$cart4 = _vm$cart4.total_price) === null || _vm$cart4 === void 0 ? void 0 : _vm$cart4.toLocaleString()))]), _vm._v(" "), _c("b-col", {
+    staticClass: "pt-3",
+    attrs: {
+      cols: "12"
+    }
   }, [_c("b-button", {
     attrs: {
-      variant: "success"
+      block: "",
+      disabled: _vm.isButtonLoading
     },
     on: {
       click: _vm.checkout
     }
-  }, [_vm._v("Checkout")])], 1)], 1)], 1)], 1)], 1)], 1) : _c("section", {
+  }, [_vm._v("Checkout Item")])], 1)], 1)], 1)], 1)]) : _vm._e()], 1)], 1)], 1)], 1) : _c("section", {
     staticClass: "d-flex h-full justify-content-center align-items-center"
   }, [_c("b-spinner")], 1);
 };

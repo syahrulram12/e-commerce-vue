@@ -122,7 +122,7 @@ export default {
         this.lastPage = response.data.last_page;
         this.loading = false;
       } catch (error) {
-        console.log(error);
+
       }
     },
     goToProduct(slug) {

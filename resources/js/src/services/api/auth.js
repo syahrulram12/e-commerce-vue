@@ -11,5 +11,5 @@ export const register = (...args) => {
 };
 
 export const getAuthUser = () => {
-    console.log(httpService.getHttp().get("/auth-user"));
+    httpService.getHttp().get("/auth-user");
 };

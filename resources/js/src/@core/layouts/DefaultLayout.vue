@@ -1,7 +1,9 @@
 <template>
   <div class="min-h-full d-flex">
     <main class="min-h-full">
-      <router-view></router-view>
+      <transition name="fade" mode="out-in">
+        <slot></slot>
+      </transition>
     </main>
   </div>
 </template>

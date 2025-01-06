@@ -17,10 +17,10 @@ class MidtransServices
 
     public function __construct()
     {
-        $this->serverKey = config();
-        $this->isProduction = config();
-        $this->isSanitized = config();
-        $this->is3ds = config();
+        $this->serverKey = config('midtrans.server_key');
+        $this->isProduction = config('midtrans.is_production');
+        $this->isSanitized = config('midtrans.is_sanitized');
+        $this->is3ds = config('midtrans.is_3ds');
 
 
         Config::$serverKey = $this->serverKey;
@@ -29,16 +29,16 @@ class MidtransServices
         Config::$is3ds = $this->is3ds;
     }
 
-    public function createSnapToken(Order $order)
+    public function createSnapToken(Order $order, $withShipping = false)
     {
         // data transaksi
         $params = [
             'transaction_details' => [
-                'order_id' => $order->order_id,
+                'order_id' => $order->order_number,
                 'gross_amount' => $order->total_price,
             ],
-            'item_details' => $this->mapItemsToDetails($order),
-            'customer_details' => $this->getCustomerDetails($order),
+            "item_details" => $this->mapItemsToDetails($order),
+            "customer_details" => $this->getCustomerDetails($order, $withShipping),
         ];
 
         try {
@@ -95,7 +95,7 @@ class MidtransServices
         $items =  $order->items()->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'price' => $item->price,
+                'price' => $item->price_per_unit,
                 'quantity' => $item->quantity,
                 'name' => $item->product_name,
             ];
@@ -110,7 +110,8 @@ class MidtransServices
         ];
 
 
-        return array_merge($items, $taxItem);
+        array_push($items, $taxItem);
+        return $items;
     }
 
     /**
@@ -120,13 +121,35 @@ class MidtransServices
      * @param Order $order Objek order yang berisi informasi tentang customer.
      * @return array Data customer yang akan dikirim ke Midtrans.
      */
-    protected function getCustomerDetails(Order $order): array
+    protected function getCustomerDetails(Order $order, $withShipping = false): array
     {
         // Sesuaikan data customer dengan informasi yang dimiliki oleh aplikasi Anda
+        $customer = $order->customer;
+
+        $customerDetails =  [
+            'first_name' => $customer->name, // Ganti dengan data nyata
+            'email' => $customer->email, // Ganti dengan data nyata
+            'phone' => $customer->phone_number, // Ganti dengan data nyata
+        ];
+
+        if ($withShipping) {
+            $customerDetails = array_merge($customerDetails, ['shipping_address' => $this->getShippingDetails($order->address ?? $customer)]);
+        }
+
+        return $customerDetails;
+    }
+
+    protected function getShippingDetails($customer): array
+    {
         return [
-            'first_name' => 'Test Dulu', // Ganti dengan data nyata
-            'email' => 'Test@gmail.com', // Ganti dengan data nyata
-            'phone' => '088225720734', // Ganti dengan data nyata
+            "first_name" => $customer->first_name ?? $customer->name,
+            "last_name" => $customer->last_name ?? '',
+            "email" => $customer->email,
+            "phone" => $customer->phone_number,
+            "address" => $customer->address,
+            "city" => $customer->city ?? '',
+            "postal_code" => $customer->postal_code ?? '',
+            "country_code" => $customer->country_code ?? "IDN"
         ];
     }
 }

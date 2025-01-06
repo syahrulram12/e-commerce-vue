@@ -48,7 +48,35 @@ export default [
             public: false,
             layout: "user",
         },
-        component: () => import("@/views/pages/user/carts/index.vue"),
+        component: () => import("@/views/pages/user/cart/index.vue"),
+    },
+    {
+        name: "order",
+        path: "/order",
+        meta: {
+            public: false,
+            layout: "user",
+        },
+        component: () => import("@/views/pages/user/order/index.vue"),
+    },
+    {
+        name: "order-detail",
+        path: "/order/{id}",
+        meta: {
+            public: false,
+            layout: "user",
+            breadcrumb: [
+                {
+                    text: "Order",
+                    to: "/order",
+                },
+                {
+                    text: "Detail",
+                    active: true,
+                },
+            ],
+        },
+        component: () => import("@/views/pages/user/order/detail.vue"),
     },
     {
         name: "product",

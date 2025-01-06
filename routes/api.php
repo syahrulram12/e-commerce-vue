@@ -24,12 +24,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/auth-user', [AuthController::class, 'getAuthUser']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart/add-to-cart', [CartController::class, 'addToCart']);
     Route::delete('/cart/delete-item/{id}', [CartController::class, 'deleteItem']);
-    Route::apiResources([
-        'order' => 'API\OrderController',
-        'cart' => 'API\CartController',
-    ]);
+    Route::get('/order', [OrderController::class, 'index']);
+    Route::post('/order', [OrderController::class, 'store']);
+    Route::get('/order/{order_id}', [OrderController::class, 'show']);
+    Route::get('/order/checkout/{order_id}', [OrderController::class, 'checkout']);
 });
 
 Route::get('/product', [ProductController::class, 'index']);

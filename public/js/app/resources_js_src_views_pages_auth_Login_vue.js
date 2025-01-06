@@ -11,63 +11,72 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
-/* harmony import */ var _services_network_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/network-service */ "./resources/js/src/services/network-service.js");
+/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/services/api-service */ "./resources/js/src/services/api-service.js");
 /* harmony import */ var _validations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @validations */ "./resources/js/src/@core/utils/validations/index.js");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-input/form-input.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form-input/form-input.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/button/button.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/spinner/spinner.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/components/form/form-invalid-feedback.js");
+/* harmony import */ var _auth_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../auth/utils */ "./resources/js/src/auth/utils.js");
+
 
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_2__.ValidationProvider,
-    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_2__.ValidationObserver,
+    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_3__.ValidationProvider,
+    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_3__.ValidationObserver,
     // Bootstrap components
-    BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__.BFormInput
+    BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__.BFormInput,
+    BButton: bootstrap_vue__WEBPACK_IMPORTED_MODULE_5__.BButton,
+    BSpinner: bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__.BSpinner,
+    BFormInvalidFeedback: bootstrap_vue__WEBPACK_IMPORTED_MODULE_7__.BFormInvalidFeedback
   },
   data: function data() {
     return {
       userEmail: "",
       userPassword: "",
       email: _validations__WEBPACK_IMPORTED_MODULE_1__.email,
-      required: _validations__WEBPACK_IMPORTED_MODULE_1__.required
+      required: _validations__WEBPACK_IMPORTED_MODULE_1__.required,
+      isButtonLoading: false
     };
   },
   methods: {
     handleLogin: function handleLogin() {
       var _this = this;
+      this.isButtonLoading = true;
       this.$refs.loginForm.validate().then(function (success) {
-        if (success) {
-          _this.buttonLoading = true;
-          var vForm = new FormData();
-          vForm.append("email", _this.userEmail);
-          vForm.append("password", _this.userPassword);
-          _services_network_service__WEBPACK_IMPORTED_MODULE_0__["default"].login(vForm).then(function (response) {
-            _this.buttonLoading = false;
-            // Store Auth User
-            localStorage.setItem("authUser", JSON.stringify(response.data.user));
-            localStorage.setItem("authToken", response.data.token);
-            // Redirect to dashboard
-            _this.$bvToast.toast("Login Successful", {
-              title: "Success",
-              variant: "success",
-              solid: true,
-              time: 3000
-            });
+        if (!success) _this.isButtonLoading = false;
+        var vForm = new FormData();
+        vForm.append("email", _this.userEmail);
+        vForm.append("password", _this.userPassword);
+        _services_api_service__WEBPACK_IMPORTED_MODULE_0__["default"].login(vForm).then(function (response) {
+          _this.buttonLoading = false;
+          // Store Auth User
+          (0,_auth_utils__WEBPACK_IMPORTED_MODULE_2__.storeAuthUser)(_auth_utils__WEBPACK_IMPORTED_MODULE_2__.authUser, response.data.customer);
+          (0,_auth_utils__WEBPACK_IMPORTED_MODULE_2__.storeToken)(response.data.token);
+          // Redirect to dashboard
+          _this.$bvToast.toast("Login Successful", {
+            title: "Success",
+            variant: "success",
+            solid: true
+          });
+          setTimeout(function () {
             _this.$router.push({
               name: "home"
             });
-          })["catch"](function (error) {
-            console.log(error.response.data.errors);
-            if (error.response.data.errors) {
-              _this.$refs.loginForm.setErrors(error.response.data.errors);
-            } else {
-              _this.$refs.loginForm.setErrors(error.response.data);
-            }
-            _this.$refs.email.focus();
-          });
-        }
+          }, 1500);
+        })["catch"](function (error) {
+          if (error.response.data.errors) {
+            _this.$refs.loginForm.setErrors(error.response.data.errors);
+          } else {
+            _this.$refs.loginForm.setErrors(error.response.data);
+          }
+          _this.$refs.email.focus();
+          _this.isButtonLoading = false;
+        });
       });
     }
   }
@@ -187,7 +196,11 @@ var render = function render() {
           on: {
             click: _vm.handleLogin
           }
-        }, [_vm._v("Login")])], 1)];
+        }, [_vm.isButtonLoading ? _c("b-spinner", {
+          attrs: {
+            small: ""
+          }
+        }) : _vm._e(), _vm._v("\n          Login\n        ")], 1)], 1)];
       }
     }])
   }), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {

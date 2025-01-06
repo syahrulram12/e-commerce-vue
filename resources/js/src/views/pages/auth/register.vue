@@ -161,9 +161,17 @@
               </ValidationProvider>
             </b-col>
           </b-row>
-          <b-button @click="handleRegister" class="mt-2">Register</b-button>
+          <b-button @click="handleRegister" class="mt-2" :disabled="isButtonLoading">
+            <b-spinner v-if="isButtonLoading" small></b-spinner>
+            Register
+          </b-button>
         </form>
       </ValidationObserver>
+      <hr />
+      <div class="text-center">
+        Already have an account?
+        <b-link @click="$router.push({ name: 'login' })">Sign in now</b-link>
+      </div>
     </div>
   </div>
 </template>
@@ -174,8 +182,16 @@ import { required, email } from "@validations";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import vSelect from "vue-select";
-import { register } from "@/services/spa/auth";
-import { BFormInput, BButton, BCol, BRow, BFormTextarea } from "bootstrap-vue";
+import apiService from "@/services/api-service";
+import {
+  BFormInput,
+  BButton,
+  BCol,
+  BRow,
+  BFormTextarea,
+  BSpinner,
+  BFormInvalidFeedback,
+} from "bootstrap-vue";
 
 export default {
   components: {
@@ -185,8 +201,11 @@ export default {
     // Bootstrap components
     BFormInput,
     BCol,
+    BButton,
     BRow,
     BFormTextarea,
+    BSpinner,
+    BFormInvalidFeedback,
 
     // Other
     flatPickr,
@@ -210,6 +229,7 @@ export default {
         email: "",
       },
       email,
+      isButtonLoading: false,
       required,
       configOptions: {
         altInput: true,
@@ -220,31 +240,38 @@ export default {
   },
   methods: {
     handleRegister() {
+      this.isButtonLoading = true;
       this.$refs.loginForm.validate().then((success) => {
-        if (success) {
-          const vForm = new FormData();
-          for (let key in this.formData) {
-            vForm.append(key, this.formData[key]);
-          }
-          // Handle login logic here
-          register(vForm)
-            .then((response) => {
-              this.$bvToast.toast(`${this.formData.name} updated successfully`, {
-                title: `Success`,
-                variant: "primary",
-                toaster: "b-toaster-top-center",
-                solid: true,
-              });
-            })
-            .catch((error) => {
-              if (error.response.data.errors) {
-                this.$refs.loginForm.setErrors(error.response.data.errors);
-              } else {
-                this.$refs.loginForm.setErrors(error.response.data);
-              }
-              this.$refs.email.focus();
-            });
+        if (!success) this.isButtonLoading = false;
+        this.isButtonLoading = true;
+        const vForm = new FormData();
+        for (let key in this.formData) {
+          vForm.append(key, this.formData[key]);
         }
+        // Handle login logic here
+        apiService
+          .register(vForm)
+          .then((response) => {
+            this.$bvToast.toast(`${this.formData.name} register successfully`, {
+              title: `Success`,
+              variant: "primary",
+              toaster: "b-toaster-top-right",
+              solid: true,
+            });
+            this.isButtonLoading = false;
+            setTimeout(() => {
+              this.$router.push({ name: "login" });
+            }, 2500);
+          })
+          .catch((error) => {
+            if (error.response.data.errors) {
+              this.$refs.loginForm.setErrors(error.response.data.errors);
+            } else {
+              this.$refs.loginForm.setErrors(error.response.data);
+            }
+            this.$refs.email.focus();
+            this.isButtonLoading = false;
+          });
       });
     },
   },

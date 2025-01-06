@@ -21,9 +21,7 @@ class CartController extends Controller
     public function index()
     {
         $perPage = request()->get('perPage', 10);
-        $cart = Cart::where('customer_id', request()->get(
-            'customer_id'
-        ))->first();
+        $cart = Cart::where('customer_id', request()->user()->id)->first();
         if (!$cart) {
             $cart = Cart::create([
                 'customer_id' => Auth::user()->customer_id ?? request()->get('customer_id'),
@@ -32,7 +30,7 @@ class CartController extends Controller
         }
         $cart->items = $cart->items;
         $cart->sub_total = $cart->items()->sum('total_price');
-        $cart->total_tax = round($cart->sub_total * 0.12);
+        $cart->total_tax = round($cart->sub_total * 0.11);
         $cart->total_price = $cart->sub_total + $cart->total_tax;
         return response()->json(
             $cart
@@ -108,12 +106,10 @@ class CartController extends Controller
             $request->validate([
                 'quantity' => ['required', 'integer'],
             ]);
-
             $cart = Cart::updateOrCreate([
-                'customer_id' => $request->customer_id,
+                'customer_id' => $request->user()->id,
             ], [
-                'customer_name' => Auth::user()->name ?? 'Customer',
-                'user_id' => $request->user_id,
+                'customer_name' => $request->user()->name ?? 'Customer',
             ]);
 
             $product = Product::findOrFail($request->product_id);
@@ -128,10 +124,12 @@ class CartController extends Controller
 
             $totalPrice = $cart->items()->sum('total_price');
             $cart->sub_total = round($totalPrice);
-            $cart->total_tax = round($totalPrice * 0.12);
+            $cart->total_tax = round($totalPrice * 0.11);
             $cart->total_price = $cart->sub_total + $cart->total_tax;
             $cart->save();
         });
+
+        return response()->json(['status' => "success"]);
     }
 
     public function deleteItem($id)
@@ -143,7 +141,7 @@ class CartController extends Controller
 
         $cart = Cart::findOrFail($cartId);
         $cart->sub_total = $cart->items()->sum('total_price');
-        $cart->total_tax = $cart->sub_total * 0.12;
+        $cart->total_tax = $cart->sub_total * 0.11;
         $cart->total_price = $cart->sub_total + $cart->total_tax;
         $cart->save();
 

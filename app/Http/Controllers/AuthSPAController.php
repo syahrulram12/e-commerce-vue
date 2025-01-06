@@ -27,7 +27,6 @@ class AuthSPAController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $user->customer = Customer::where('user_id', $user->id)->first();

@@ -1,7 +1,6 @@
 import { axiosWebIns } from "../@core/libs/axios";
 const csrfCookiePath = "/sanctum/csrf-cookie";
-import { authAdmin } from "../auth/utils";
-import { authUser } from "../auth/utils";
+import { authAdmin } from "@/auth/utils";
 export default new (class {
     axiosIns = null;
     user = null;
