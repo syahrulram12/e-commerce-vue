@@ -158,7 +158,10 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(breadCrumb.text))]);
   }), 1) : _vm._e()], 1)])]), _vm._v(" "), _c("section", [_c("b-container", {
-    staticClass: "my-2"
+    staticClass: "my-2",
+    attrs: {
+      fluid: ""
+    }
   }, [_c("b-row", {
     staticClass: "my-auto"
   }, _vm._l(_vm.orders, function (order) {
@@ -181,19 +184,29 @@ var render = function render() {
         }
       }
     }, [_c("b-row", [_c("b-col", {
+      staticClass: "mb-2 position-relative",
       attrs: {
-        cols: "6"
+        cols: "12",
+        md: "6"
       }
     }, [_c("p", {
-      staticClass: "mb-1"
+      staticClass: "m-0gi"
     }, [_c("b", [_vm._v("Order Number : " + _vm._s(order.order_number))]), _vm._v(" "), _c("br"), _vm._v("\n                  " + _vm._s(order.created_at)), _c("br")]), _vm._v(" "), _c("b-badge", {
-      staticClass: "px-3 py-1",
+      staticClass: "ml-2 px-3 py-1 position-absolute",
+      staticStyle: {
+        bottom: "0",
+        left: "0"
+      },
       attrs: {
         variant: _vm.statusVariant((_order$status = order.status) !== null && _order$status !== void 0 ? _order$status : "PENDING")
       }
-    }, [_vm._v("\n                  " + _vm._s((_order$status2 = order.status) !== null && _order$status2 !== void 0 ? _order$status2 : "PENDING") + "\n                ")])], 1), _vm._v(" "), _c("b-col", {
+    }, [_c("h6", {
+      staticClass: "font-weight-bold"
+    }, [_vm._v("\n                    " + _vm._s((_order$status2 = order.status) !== null && _order$status2 !== void 0 ? _order$status2 : "PENDING") + "\n                  ")])])], 1), _vm._v(" "), _c("b-col", {
+      staticClass: "mb-2",
       attrs: {
-        cols: "6"
+        cols: "12",
+        md: "6"
       }
     }, [_c("b-row", [_c("b-col", {
       attrs: {

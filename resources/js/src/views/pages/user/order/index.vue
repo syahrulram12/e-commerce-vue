@@ -25,7 +25,7 @@
       </div>
     </section>
     <section>
-      <b-container class="my-2">
+      <b-container fluid class="my-2">
         <b-row class="my-auto">
           <b-col cols="12" class="py-2" v-for="order in orders" :key="order.id">
             <b-card
@@ -35,20 +35,23 @@
               @click="goToProduct(order.order_number)"
             >
               <b-row>
-                <b-col cols="6">
-                  <p class="mb-1">
+                <b-col cols="12" md="6" class="mb-2 position-relative">
+                  <p class="m-0gi">
                     <b>Order Number : {{ order.order_number }}</b>
                     <br />
                     {{ order.created_at }}<br />
                   </p>
                   <b-badge
-                    class="px-3 py-1"
+                    class="ml-2 px-3 py-1 position-absolute"
+                    style="bottom: 0; left: 0"
                     :variant="statusVariant(order.status ?? 'PENDING')"
                   >
-                    {{ order.status ?? "PENDING" }}
+                    <h6 class="font-weight-bold">
+                      {{ order.status ?? "PENDING" }}
+                    </h6>
                   </b-badge>
                 </b-col>
-                <b-col cols="6">
+                <b-col cols="12" md="6" class="mb-2">
                   <b-row>
                     <b-col cols="6">Sub Total</b-col>
                     <b-col cols="6">{{ order?.sub_total?.toLocaleString() }}</b-col>
